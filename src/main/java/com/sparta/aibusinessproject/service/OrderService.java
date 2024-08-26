@@ -2,6 +2,7 @@ package com.sparta.aibusinessproject.service;
 
 import com.sparta.aibusinessproject.domain.Order;
 import com.sparta.aibusinessproject.domain.request.OrderCreateRequest;
+import com.sparta.aibusinessproject.domain.request.OrderSearchRequest;
 import com.sparta.aibusinessproject.domain.response.OrderCreateResponse;
 import com.sparta.aibusinessproject.domain.response.OrderFindResponse;
 import com.sparta.aibusinessproject.exception.ApplicationException;
@@ -34,6 +35,10 @@ public class OrderService {
                 .map(OrderFindResponse::fromEntity)
                 .orElseThrow(() -> new ApplicationException(INVALID_ORDER));
 
+    }
+
+    public Page<OrderFindResponse> findAllOrders(OrderSearchRequest searchDto, Pageable pageable, String role, String userId) {
+        return orderRepository.searchOrders(searchDto, pageable,role, userId);
     }
 
     public OrderCreateResponse createStore(OrderCreateRequest requestDto) {

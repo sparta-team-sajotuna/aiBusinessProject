@@ -24,13 +24,15 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    private String storeName;
+
     private String paymentMethod;
 
     private int totalPrice;
 
     private String requests;
 
-    private String status;//접수, 결제전, 결제 완료
+    private OrderStatus status;//접수, 결제전, 결제 완료
 
     private LocalDateTime deletedAt;
     private String deletedBy;

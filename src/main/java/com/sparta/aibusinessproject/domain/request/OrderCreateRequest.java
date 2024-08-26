@@ -1,6 +1,7 @@
 package com.sparta.aibusinessproject.domain.request;
 
 import com.sparta.aibusinessproject.domain.Order;
+import com.sparta.aibusinessproject.domain.OrderStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,7 +21,7 @@ public class OrderCreateRequest {
 
     private String requests;
 
-    private String status;
+    private OrderStatus status;
 
     public static Order toEntity(OrderCreateRequest requestDto){
         return Order.builder()

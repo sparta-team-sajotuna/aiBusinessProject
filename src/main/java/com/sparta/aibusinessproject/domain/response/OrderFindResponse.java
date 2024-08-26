@@ -1,6 +1,7 @@
 package com.sparta.aibusinessproject.domain.response;
 
 import com.sparta.aibusinessproject.domain.Order;
+import com.sparta.aibusinessproject.domain.OrderStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,7 +25,7 @@ public class OrderFindResponse {
     private String requests;
 
     //TODO: Enum으로 수정
-    private String status;//접수, 결제전, 결제 완료
+    private OrderStatus status;//접수, 결제전, 결제 완료
 
     public static OrderFindResponse fromEntity(Order order) {
         return OrderFindResponse.builder()

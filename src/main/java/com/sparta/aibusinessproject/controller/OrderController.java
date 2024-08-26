@@ -1,6 +1,7 @@
 package com.sparta.aibusinessproject.controller;
 
 import com.sparta.aibusinessproject.domain.request.OrderCreateRequest;
+import com.sparta.aibusinessproject.domain.request.OrderSearchRequest;
 import com.sparta.aibusinessproject.domain.response.OrderCreateResponse;
 import com.sparta.aibusinessproject.domain.response.OrderFindResponse;
 import com.sparta.aibusinessproject.exception.Response;
@@ -20,9 +21,17 @@ public class OrderController {
 
     private final OrderService orderService;
 
-    @GetMapping
-    public Response<OrderFindResponse> findOrder(@RequestParam UUID orderId){
+    @GetMapping("/{orderId}")
+    public Response<OrderFindResponse> findOrder(@PathVariable UUID orderId){
         return Response.success(orderService.findOrder(orderId));
+    }
+
+    @GetMapping
+    public Response<Page<OrderFindResponse>> findOrders(OrderSearchRequest searchDto, Pageable pageable){
+        // TODO : 하드코딩 수정
+        String role = "CUSTOMER";
+        String userId = "user";
+        return Response.success(orderService.findAllOrders(searchDto, pageable, role, userId));
     }
 
     @PostMapping
