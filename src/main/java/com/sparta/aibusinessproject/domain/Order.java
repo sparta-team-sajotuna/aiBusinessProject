@@ -6,7 +6,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.awt.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,12 +47,16 @@ public class Order {
     @JoinColumn(name = "user_id")
     private Store store;*/
 
-    /* 메뉴 리스트
+
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Menu> menu_ids = new ArrayList<>();*/
+    private List<OrderMenu> orderMenuList = new ArrayList<>();
 
     public void deleteOrder(String deletedBy){
         this.deletedBy = deletedBy;
         this.deletedAt = LocalDateTime.now();
+    }
+
+    public void addOrderMenu(OrderMenu menu) {
+        orderMenuList.add(menu);
     }
 }
