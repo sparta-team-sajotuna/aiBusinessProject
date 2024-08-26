@@ -9,6 +9,7 @@ import com.sparta.aibusinessproject.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -27,8 +28,9 @@ public class OrderController {
     }
 
     @GetMapping
-    public Response<Page<OrderFindResponse>> findOrders(OrderSearchRequest searchDto, Pageable pageable){
-        // TODO : 하드코딩 수정
+    public Response<Page<OrderFindResponse>> findOrders(OrderSearchRequest searchDto, @PageableDefault(size = 10) Pageable pageable){
+        //TODO 안지연
+        // - 하드코딩 수정
         String role = "CUSTOMER";
         String userId = "user";
         return Response.success(orderService.findAllOrders(searchDto, pageable, role, userId));
@@ -43,6 +45,9 @@ public class OrderController {
     public Response<UUID> deleteOrder(@PathVariable UUID orderId){
         return Response.success(orderService.deleteOrder(orderId));
     }
+
+    //TODO 안지연
+    // - 주문상태변경
 
 }
 
