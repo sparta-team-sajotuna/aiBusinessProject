@@ -26,3 +26,9 @@ logging:
         orm:
           jdbc:
             bind: trace
+
+jwt:
+  secret:
+    key: ${JWT_SECRET_KEY}
+owner:
+  token: ${OWNER_TOKEN}

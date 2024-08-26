@@ -14,5 +14,4 @@ public class ExceptionManager {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(Response.error(e.getMessage()));
     }
-
 }
