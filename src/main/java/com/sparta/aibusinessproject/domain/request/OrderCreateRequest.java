@@ -1,14 +1,13 @@
 package com.sparta.aibusinessproject.domain.request;
 
 import com.sparta.aibusinessproject.domain.Order;
-import com.sparta.aibusinessproject.domain.OrderStatus;
+import com.sparta.aibusinessproject.domain.OrderStatusEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 @Getter
 @AllArgsConstructor
@@ -22,7 +21,7 @@ public class OrderCreateRequest {
 
     private String requests;
 
-    private OrderStatus status;
+    private OrderStatusEnum status;
 
     public static Order toEntity(OrderCreateRequest requestDto){
         return Order.builder()
@@ -30,7 +29,7 @@ public class OrderCreateRequest {
                 .paymentMethod(requestDto.getPaymentMethod())
                 .totalPrice(requestDto.getTotalPrice())
                 .requests(requestDto.getRequests())
-                .status(requestDto.getStatus())
+                .status(OrderStatusEnum.CREATED)
                 .build();
     }
 }

@@ -1,5 +1,5 @@
 package com.sparta.aibusinessproject.domain;
 
-public enum OrderStatus {
+public enum OrderStatusEnum {
     CREATED, PAID, SHIPPED, COMPLETED, CANCELLED
 }

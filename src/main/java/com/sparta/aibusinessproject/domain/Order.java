@@ -31,7 +31,8 @@ public class Order {
 
     private String requests;
 
-    private OrderStatus status;//접수, 결제전, 결제 완료
+    @Enumerated(value = EnumType.STRING)
+    private OrderStatusEnum status;
 
     private LocalDateTime deletedAt;
     private String deletedBy;
@@ -58,5 +59,9 @@ public class Order {
 
     public void addOrderMenu(OrderMenu menu) {
         orderMenuList.add(menu);
+    }
+
+    public void modifyOrderStatus(OrderStatusEnum status){
+        this.status = status;
     }
 }

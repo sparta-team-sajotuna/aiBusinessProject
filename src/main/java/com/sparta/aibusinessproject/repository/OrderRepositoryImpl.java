@@ -5,8 +5,7 @@ import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sparta.aibusinessproject.domain.Order;
-import com.sparta.aibusinessproject.domain.OrderStatus;
-import com.sparta.aibusinessproject.domain.QOrder;
+import com.sparta.aibusinessproject.domain.OrderStatusEnum;
 import com.sparta.aibusinessproject.domain.request.OrderSearchRequest;
 import com.sparta.aibusinessproject.domain.response.OrderFindResponse;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +20,8 @@ import java.util.stream.Collectors;
 
 import static com.sparta.aibusinessproject.domain.QOrder.order;
 
-
+//TODO 안지연
+// -주석풀기
 @RequiredArgsConstructor
 public class OrderRepositoryImpl implements OrderRepositoryCustom {
 
@@ -36,7 +36,7 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
                 .selectFrom(order)
                 .where(
                         statusEq(searchDto.getStatus())
-                        //orderItemIdsIn(searchDto.getOrderItemIds()),
+                        //orderItemIdsIn(searchDto.getOrderItemIds())
                         //userCheck(role, userId)
                 )
                 .orderBy(orders.toArray(new OrderSpecifier[0]))
@@ -52,7 +52,7 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
         return new PageImpl<>(content, pageable, total);
     }
 
-    private BooleanExpression statusEq(OrderStatus status) {
+    private BooleanExpression statusEq(OrderStatusEnum status) {
         return status != null ? order.status.eq(status) : null;
     }
 //    private BooleanExpression userCheck(String role, String userId) {
@@ -70,11 +70,11 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
             for (Sort.Order sortOrder : pageable.getSort()) {
                 com.querydsl.core.types.Order direction = sortOrder.isAscending() ? com.querydsl.core.types.Order.ASC : com.querydsl.core.types.Order.DESC;
                 switch (sortOrder.getProperty()) {
-//                    case "createdAt":
-//                        orders.add(new OrderSpecifier<>(direction, QOrder.order.createdAt));
-//                        break;
-                    case "status":
-                        orders.add(new OrderSpecifier<>(direction, QOrder.order.status));
+                    case "createdAt":
+                        //orders.add(new OrderSpecifier<>(direction, QOrder.order.createdAt));
+                        break;
+                    case "updatedAt":
+                        //orders.add(new OrderSpecifier<>(direction, QOrder.order.updatedAt));
                         break;
                     default:
                         break;

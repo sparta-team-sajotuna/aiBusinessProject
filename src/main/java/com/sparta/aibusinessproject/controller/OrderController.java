@@ -1,6 +1,7 @@
 package com.sparta.aibusinessproject.controller;
 
 import com.sparta.aibusinessproject.domain.request.OrderCreateRequest;
+import com.sparta.aibusinessproject.domain.request.OrderModifyRequest;
 import com.sparta.aibusinessproject.domain.request.OrderSearchRequest;
 import com.sparta.aibusinessproject.domain.response.OrderCreateResponse;
 import com.sparta.aibusinessproject.domain.response.OrderFindResponse;
@@ -12,7 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -46,8 +46,10 @@ public class OrderController {
         return Response.success(orderService.deleteOrder(orderId));
     }
 
-    //TODO 안지연
-    // - 주문상태변경
+    @PatchMapping("/{orderId}")
+    public Response<UUID> modify(@PathVariable UUID orderId, @RequestBody OrderModifyRequest requestDto){
+        return Response.success(orderService.modifyOrderStatus(orderId, requestDto.getStatus()));
+    }
 
 }
 
