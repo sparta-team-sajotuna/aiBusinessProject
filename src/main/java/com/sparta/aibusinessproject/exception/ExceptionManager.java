@@ -14,4 +14,10 @@ public class ExceptionManager {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(Response.error(e.getMessage()));
     }
+
+//    @ExceptionHandler(NotValidException.class)
+//    public ResponseEntity<?> notValidExceptionHandler(NotValidException e) {
+//        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+//                .body(Response.error(e.getMessage()));
+//    }
 }

@@ -33,6 +33,7 @@ public class JwtUtil {
     private Key key;
     private final SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
 
+    // secret key를 디코딩하여 Key 객체로 변환
     @PostConstruct
     public void init() {
         byte[] bytes = Base64.getDecoder().decode(secretKey);
@@ -80,15 +81,15 @@ public class JwtUtil {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
         } catch (ExpiredJwtException e) {
-            log.error("Expired JWT token, 만료된 JWT token 입니다.");
+            log.error("Expired JWT token, 만료된 JWT token 입니다. 사용자 ID: {}", getUserInfoFromToken(token));
         } catch (UnsupportedJwtException e) {
-            log.error("Unsupported JWT token, 지원되지 않는 JWT 토큰 입니다.");
+            log.error("Unsupported JWT token, 지원되지 않는 JWT 토큰 입니다. 사용자 ID: {}", getUserInfoFromToken(token));
         } catch (MalformedJwtException e) {
-            log.error("Invalid JWT token, 유효하지 않은 JWT token 입니다.");
+            log.error("Invalid JWT token, 유효하지 않은 JWT token 입니다. 사용자 ID: {}", getUserInfoFromToken(token));
         } catch (SignatureException e) {
-            log.error("Invalid JWT signature, 유효하지 않는 JWT 서명 입니다.");
+            log.error("Invalid JWT signature, 유효하지 않는 JWT 서명 입니다. 사용자 ID: {}", getUserInfoFromToken(token));
         } catch (IllegalArgumentException e) {
-            log.error("JWT claims is empty, 잘못된 JWT 토큰 입니다.");
+            log.error("JWT claims is empty, 잘못된 JWT 토큰 입니다. 사용자 ID: {}", getUserInfoFromToken(token));
         }
         return false;
     }

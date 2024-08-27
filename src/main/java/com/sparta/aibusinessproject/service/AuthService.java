@@ -12,9 +12,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-import java.util.UUID;
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -28,21 +25,17 @@ public class AuthService {
 
     public void signup(SignupRequestDto signupRequestDto) {
         // ID 중복 확인
-        String userId = signupRequestDto.getUserId();
-        Optional<User> checkUserId = userRepository.findById(UUID.fromString(userId));
-        if (checkUserId.isPresent()) {
+        if (userRepository.existsById(signupRequestDto.getUserId())) {
             throw new ApplicationException(ErrorCode.DUPLICATED_USERID);
         }
         // PASSWORD 암호화
         String password = passwordEncoder.encode(signupRequestDto.getPassword());
+        signupRequestDto.setPassword(password);
 
         // EMAIL 중복 확인
-        String email = signupRequestDto.getEmail();
-        Optional<User> checkEmail = userRepository.findByEmail(email);
-        if (checkUserId.isPresent()) {
+        if (userRepository.existsByEmail(signupRequestDto.getEmail())) {
             throw new ApplicationException(ErrorCode.DUPLICATED_EMAIL);
         }
-
         // 사용자 ROLE 확인 // owner 값이 true이면 token이 있음.
         UserRoleEnum role = UserRoleEnum.CUSTOMER;
         if (signupRequestDto.isOwner()) {
@@ -52,5 +45,9 @@ public class AuthService {
             role = UserRoleEnum.OWNER;
         }
 
+        userRepository.save(User.fromSignupRequestDto(signupRequestDto, role));
     }
+
+
+
 }
