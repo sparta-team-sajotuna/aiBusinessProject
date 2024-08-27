@@ -30,8 +30,6 @@ logging:
         orm:
           jdbc:
             bind: trace
-        SQL: DEBUG
-        type: TRACE
 
 jwt:
   secret:
