@@ -18,7 +18,7 @@ import java.util.UUID;
 @Getter
 @Entity
 @Table(name = "p_order")
-public class Order {
+public class Order extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
@@ -55,6 +55,7 @@ public class Order {
     public void deleteOrder(String deletedBy){
         this.deletedBy = deletedBy;
         this.deletedAt = LocalDateTime.now();
+        modifyOrderStatus(OrderStatusEnum.CANCELLED);
     }
 
     public void addOrderMenu(OrderMenu menu) {

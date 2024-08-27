@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Getter
 @Builder
@@ -20,7 +21,7 @@ public class OrderFindResponse {
     //TODO
     //private Store store;
 
-    private List<OrderMenu> menuList = new ArrayList<>();
+    private UUID orderId;
     private String paymentMethod;
 
     private int totalPrice;
@@ -29,13 +30,16 @@ public class OrderFindResponse {
 
     private OrderStatusEnum status;
 
+    private List<OrderMenu> menuList = new ArrayList<>();
+
     public static OrderFindResponse fromEntity(Order order) {
         return OrderFindResponse.builder()
-                .menuList(order.getOrderMenuList())
+                .orderId(order.getId())
                 .paymentMethod(order.getPaymentMethod())
                 .totalPrice(order.getTotalPrice())
                 .requests(order.getRequests())
                 .status(order.getStatus())
+                .menuList(order.getOrderMenuList())
                 .build();
     }
 }

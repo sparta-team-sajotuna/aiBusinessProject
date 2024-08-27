@@ -14,6 +14,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,7 +36,8 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
         QueryResults<Order> results = queryFactory
                 .selectFrom(order)
                 .where(
-                        statusEq(searchDto.getStatus())
+                        statusEq(searchDto.getStatus()),
+                        order.deletedAt.isNull()
                         //orderItemIdsIn(searchDto.getOrderItemIds())
                         //userCheck(role, userId)
                 )

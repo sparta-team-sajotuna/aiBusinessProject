@@ -17,10 +17,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
-import static com.sparta.aibusinessproject.exception.ErrorCode.INVALID_MENU;
-import static com.sparta.aibusinessproject.exception.ErrorCode.INVALID_ORDER;
+import static com.sparta.aibusinessproject.exception.ErrorCode.*;
 
 
 @Service
@@ -58,14 +59,23 @@ public class OrderService {
         return OrderCreateResponse.fromEntity(orderRepository.save(order));
     }
 
-    //TODO 안지연
-    // -5분 이내 취소 구현
     @Transactional
     public UUID deleteOrder(UUID orderId) {
         Order order = orderRepository.findById(orderId)
                 .filter(p -> p.getDeletedAt() == null)
                 .orElseThrow(() -> new ApplicationException(INVALID_ORDER));
+
+        //5분 이내 취소
+        LocalDateTime createdAt = order.getCreatedAt();
+        LocalDateTime now = LocalDateTime.now();
+        Duration duration = Duration.between(createdAt, now);
+        if(duration.toMinutes() > 5){
+            throw new ApplicationException(ORDER_CANCELLATION_NOT_ALLOWED_TIME);
+        }
+
+        //TODO 하드코딩 수정
         order.deleteOrder("user");
+
         return orderRepository.save(order).getId();
     }
 
