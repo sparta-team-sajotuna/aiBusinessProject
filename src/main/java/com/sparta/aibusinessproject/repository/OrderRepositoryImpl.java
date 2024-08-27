@@ -19,7 +19,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.sparta.aibusinessproject.domain.QMenu.menu;
 import static com.sparta.aibusinessproject.domain.QOrder.order;
+import static com.sparta.aibusinessproject.domain.QOrderMenu.orderMenu;
 
 //TODO 안지연
 // -주석풀기
@@ -35,6 +37,8 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
 
         QueryResults<Order> results = queryFactory
                 .selectFrom(order)
+//                .leftJoin(order.orderMenuList, orderMenu).fetchJoin() //orderMenu 조인
+//                .leftJoin(orderMenu.menu, menu).fetchJoin() //menu 조인
                 .where(
                         statusEq(searchDto.getStatus()),
                         order.deletedAt.isNull()

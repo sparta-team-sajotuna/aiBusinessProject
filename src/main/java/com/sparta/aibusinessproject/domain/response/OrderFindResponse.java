@@ -30,7 +30,7 @@ public class OrderFindResponse {
 
     private OrderStatusEnum status;
 
-    private List<OrderMenu> menuList = new ArrayList<>();
+    private List<MenuInfoResponse> menuList = new ArrayList<>();
 
     public static OrderFindResponse fromEntity(Order order) {
         return OrderFindResponse.builder()
@@ -39,7 +39,8 @@ public class OrderFindResponse {
                 .totalPrice(order.getTotalPrice())
                 .requests(order.getRequests())
                 .status(order.getStatus())
-                .menuList(order.getOrderMenuList())
+                .menuList(order.getOrderMenuList().stream()
+                        .map(OrderMenu::toMenuInfo).toList())
                 .build();
     }
 }

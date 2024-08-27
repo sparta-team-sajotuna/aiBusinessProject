@@ -1,6 +1,7 @@
 package com.sparta.aibusinessproject.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.sparta.aibusinessproject.domain.response.MenuInfoResponse;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -38,5 +39,9 @@ public class OrderMenu {
                 .menu(menu)
                 .quantity(quantity)
                 .build();
+    }
+
+    public MenuInfoResponse toMenuInfo() {
+        return MenuInfoResponse.fromOrderMenu(this);
     }
 }
