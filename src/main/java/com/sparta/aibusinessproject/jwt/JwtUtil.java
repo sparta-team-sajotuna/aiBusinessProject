@@ -4,12 +4,15 @@ import com.sparta.aibusinessproject.domain.UserRoleEnum;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.security.Key;
 import java.util.Base64;
 import java.util.Date;
@@ -41,12 +44,12 @@ public class JwtUtil {
     }
 
     // Access Token 생성
-    public String createAccessToken(String username, UserRoleEnum role) {
+    public String createAccessToken(String userId, UserRoleEnum role) {
         Date date = new Date();
 
         return BEARER_PREFIX +
                 Jwts.builder()
-                        .setSubject(username) // 사용자 식별자값(ID)
+                        .setSubject(userId) // 사용자 식별자값(ID)
                         .claim(AUTHORIZATION_KEY, role) // 사용자 권한
                         .setExpiration(new Date(date.getTime() + ACCESS_TOKEN_TIME)) // 만료 시간
                         .setIssuedAt(date) // 발급일
@@ -55,25 +58,44 @@ public class JwtUtil {
     }
 
     // Refresh Token 생성
-    public String createRefreshToken(String username) {
+    // 엑세스 토큰의 갱신, 장기 세션 유지 등의 역할을 하므로, role의 정보는 넣지 않음.
+    public String createRefreshToken(String userId) {
         Date date = new Date();
 
         return Jwts.builder()
-                .setSubject(username) // 사용자 식별자값(ID)
+                .setSubject(userId) // 사용자 식별자값(ID)
                 .setExpiration(new Date(date.getTime() + REFRESH_TOKEN_TIME)) // 만료 시간
                 .setIssuedAt(date) // 발급일
                 .signWith(key, signatureAlgorithm) // 암호화 알고리즘
                 .compact();
     }
 
-    // header에서 JWT 가져오기
-    public String getJwtFromHeader(HttpServletRequest request) {
+    // Refresh Token 생성 후 Cookie에 담기
+    public Cookie addRefreshTokenToCookie(String refreshToken) {
+        // Cookie Value 에는 공백이 불가능하므로 encoding 진행
+        try {
+            refreshToken = URLEncoder.encode(refreshToken, "utf-8").replaceAll("\\+", "%20");
+            Cookie refreshTokenCookie = new Cookie("RefreshTokenCookie", refreshToken);
+            refreshTokenCookie.setHttpOnly(true);
+            refreshTokenCookie.setPath("/");
+            refreshTokenCookie.setMaxAge((int) (REFRESH_TOKEN_TIME / 1000));
+            return refreshTokenCookie;
+        } catch (UnsupportedEncodingException e) {
+            log.error("Refresh Token encoding 오류: {}", e.getMessage());
+            throw new RuntimeException(e);
+        }
+    }
+
+    // Header에서 Access Token 가져오기
+    public String getAccessTokenFromHeader(HttpServletRequest request) {
         String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_PREFIX)) {
             return bearerToken.substring(7); // 순수한 토큰 가져오기 위해 substring(BEARER 자름)
         }
         return null;
     }
+    // Cookie에서 Refresh Token 가져오기
+
 
     // 토큰 검증
     public boolean validateToken(String token) {
