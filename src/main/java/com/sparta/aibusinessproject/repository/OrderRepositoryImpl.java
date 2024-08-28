@@ -6,6 +6,7 @@ import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sparta.aibusinessproject.domain.Order;
 import com.sparta.aibusinessproject.domain.OrderStatusEnum;
+import com.sparta.aibusinessproject.domain.QOrder;
 import com.sparta.aibusinessproject.domain.request.OrderSearchRequest;
 import com.sparta.aibusinessproject.domain.response.OrderFindResponse;
 import lombok.RequiredArgsConstructor;
@@ -37,8 +38,8 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
 
         QueryResults<Order> results = queryFactory
                 .selectFrom(order)
-//                .leftJoin(order.orderMenuList, orderMenu).fetchJoin() //orderMenu 조인
-//                .leftJoin(orderMenu.menu, menu).fetchJoin() //menu 조인
+                .leftJoin(order.orderMenuList, orderMenu).fetchJoin() //orderMenu 조인
+                .leftJoin(orderMenu.menu, menu).fetchJoin() //menu 조인
                 .where(
                         statusEq(searchDto.getStatus()),
                         order.deletedAt.isNull()
@@ -77,10 +78,10 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
                 com.querydsl.core.types.Order direction = sortOrder.isAscending() ? com.querydsl.core.types.Order.ASC : com.querydsl.core.types.Order.DESC;
                 switch (sortOrder.getProperty()) {
                     case "createdAt":
-                        //orders.add(new OrderSpecifier<>(direction, QOrder.order.createdAt));
+                        orders.add(new OrderSpecifier<>(direction, QOrder.order.createdAt));
                         break;
-                    case "updatedAt":
-                        //orders.add(new OrderSpecifier<>(direction, QOrder.order.updatedAt));
+                    case "modifiedAt":
+                        orders.add(new OrderSpecifier<>(direction, QOrder.order.modifiedAt));
                         break;
                     default:
                         break;

@@ -17,10 +17,12 @@ public class Timestamped {
     @Column(updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime createdAt;
+    private String createdBy;
 
     @LastModifiedDate
     @Column
     @Temporal(TemporalType.TIMESTAMP)
-    private LocalDateTime midifiedAt;
+    private LocalDateTime modifiedAt;
+    private String modifiedBy;
 
 }
