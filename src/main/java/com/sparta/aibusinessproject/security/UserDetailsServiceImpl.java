@@ -13,9 +13,10 @@ import org.springframework.stereotype.Service;
 
 /*
  * 사용자 인증을 처리하고 UserDetails객체 반환
+ * DB에서 회원정보를 조회해서 반환
  *
  */
-@Slf4j
+@Slf4j(topic = "UserDetails Service")
 @Service
 @RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {

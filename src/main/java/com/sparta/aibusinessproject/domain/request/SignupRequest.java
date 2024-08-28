@@ -10,7 +10,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SignupRequestDto {
+public class SignupRequest {
     @NotBlank
     @Size(min = 4, max = 10)
     @Pattern(regexp = "^[a-z0-9]+$", message = "아이디를 형식에 맞게 입력해 주세요.")

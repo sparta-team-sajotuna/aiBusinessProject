@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginRequestDto {
+public class LoginRequest {
 
     // spring security에서는 username을 사용한다고 하는데, 일단 한 번 userId로 시도
     private String userId;

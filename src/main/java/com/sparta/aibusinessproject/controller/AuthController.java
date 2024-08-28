@@ -1,15 +1,11 @@
 package com.sparta.aibusinessproject.controller;
 
-import com.sparta.aibusinessproject.domain.request.SignupRequestDto;
-import com.sparta.aibusinessproject.exception.ErrorCode;
-import com.sparta.aibusinessproject.exception.NotValidException;
+import com.sparta.aibusinessproject.domain.request.SignupRequest;
 import com.sparta.aibusinessproject.exception.Response;
 import com.sparta.aibusinessproject.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,7 +20,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/signup")
-    public Response<String> signup(@RequestBody @Valid SignupRequestDto signupRequestDto) {
+    public Response<String> signup(@RequestBody @Valid SignupRequest signupRequestDto) {
         log.info(signupRequestDto.toString());
 
         authService.signup(signupRequestDto);

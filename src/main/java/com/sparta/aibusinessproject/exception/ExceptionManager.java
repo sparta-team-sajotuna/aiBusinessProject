@@ -34,6 +34,8 @@ public class ExceptionManager {
         return new ResponseEntity<>(Response.error(errorResponse), HttpStatus.BAD_REQUEST);
 
     }
+
+
     // 유효성 검사 시 어느 부분에서 예외가 발생했는지 확인하는 메서드
     private ErrorResponse handleBindingResultErrors(BindingResult bindingResult) {
         for (FieldError fieldError : bindingResult.getFieldErrors()) {

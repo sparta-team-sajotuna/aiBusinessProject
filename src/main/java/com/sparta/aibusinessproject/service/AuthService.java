@@ -2,7 +2,7 @@ package com.sparta.aibusinessproject.service;
 
 import com.sparta.aibusinessproject.domain.User;
 import com.sparta.aibusinessproject.domain.UserRoleEnum;
-import com.sparta.aibusinessproject.domain.request.SignupRequestDto;
+import com.sparta.aibusinessproject.domain.request.SignupRequest;
 import com.sparta.aibusinessproject.exception.ErrorCode;
 import com.sparta.aibusinessproject.exception.NotValidException;
 import com.sparta.aibusinessproject.repository.UserRepository;
@@ -23,7 +23,7 @@ public class AuthService {
     @Value("${owner.token}")
     private String ownerToken;
 
-    public void signup(SignupRequestDto signupRequestDto) {
+    public void signup(SignupRequest signupRequestDto) {
         // ID 중복 확인
         if (userRepository.existsById(signupRequestDto.getUserId())) {
             throw new NotValidException(ErrorCode.DUPLICATED_USERID);

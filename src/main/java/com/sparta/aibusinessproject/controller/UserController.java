@@ -1,6 +1,6 @@
 package com.sparta.aibusinessproject.controller;
 
-import com.sparta.aibusinessproject.domain.response.UserInfoResponseDto;
+import com.sparta.aibusinessproject.domain.response.UserInfoResponse;
 import com.sparta.aibusinessproject.security.UserDetailsImpl;
 import com.sparta.aibusinessproject.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,7 @@ public class UserController {
 
     // 발급한 토큰을 사용하여 사용자 정보 조회
     @GetMapping
-    public UserInfoResponseDto getUserInfo(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public UserInfoResponse getUserInfo(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         return userService.getUserInfo(userDetails.getUsername());
     }
 }
