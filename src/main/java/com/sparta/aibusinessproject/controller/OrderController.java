@@ -1,5 +1,6 @@
 package com.sparta.aibusinessproject.controller;
 
+import com.sparta.aibusinessproject.domain.Address;
 import com.sparta.aibusinessproject.domain.request.OrderCreateRequest;
 import com.sparta.aibusinessproject.domain.request.OrderModifyRequest;
 import com.sparta.aibusinessproject.domain.request.OrderSearchRequest;
