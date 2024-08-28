@@ -1,6 +1,6 @@
 package com.sparta.aibusinessproject.domain;
 
-import com.sparta.aibusinessproject.domain.request.SignupRequestDto;
+import com.sparta.aibusinessproject.domain.request.SignupRequest;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -43,7 +43,7 @@ public class User {
     private List<Address> address = new ArrayList<>();
 
     // SignupRequestDto를 User 객체로 변환하는 메서드
-    public static User fromSignupRequestDto(SignupRequestDto signupRequestDto, UserRoleEnum role) {
+    public static User fromSignupRequestDto(SignupRequest signupRequestDto, UserRoleEnum role) {
         return User.builder()
                 .userId(signupRequestDto.getUserId())
                 .password(signupRequestDto.getPassword()) // 비밀번호는 암호화 후 저장할 것
