@@ -22,7 +22,6 @@ public class AuthController {
     @PostMapping("/signup")
     public Response<String> signup(@RequestBody @Valid SignupRequest signupRequestDto) {
         log.info(signupRequestDto.toString());
-
         authService.signup(signupRequestDto);
         return Response.success("회원가입이 완료되었습니다. 로그인 후 다양한 서비스를 이용해 보세요.");
     }
