@@ -1,6 +1,7 @@
 package com.sparta.aibusinessproject.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.sparta.aibusinessproject.domain.request.MenuModifyRequest;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,12 +19,19 @@ import java.util.UUID;
 @Getter
 @Entity
 @Table(name = "p_menu")
-public class Menu {
+public class Menu extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     private String name;
+
+    private int price;
+
+    // TODO 가게랑 매핑
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "store_id")
+    private Store store;
 
     @OneToMany(mappedBy = "menu", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderMenu> orderMenuList = new ArrayList<>();
@@ -31,4 +39,13 @@ public class Menu {
     private LocalDateTime deletedAt;
     private String deletedBy;
 
+    public void modifyMenu(MenuModifyRequest requestDto) {
+        this.name = requestDto.getName();
+        this.price = requestDto.getPrice();
+    }
+
+    public void deleteMenu(String deletedBy){
+        this.deletedAt = LocalDateTime.now();
+        this.deletedBy = deletedBy;
+    }
 }
