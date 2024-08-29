@@ -21,18 +21,18 @@ import java.util.UUID;
 @Where(clause = "deleted_at is NULL")
 // Delete 쿼리문이 동작될때, 실제로는 Delete쿼리문이 가지않고 아래의 쿼리문이 동작함
 @SQLDelete(sql = "UPDATE p_store_category SET deleted_at = current_timestamp WHERE id = ?")
-public class StoreCategory {
+public class StoreCategory extends Timestamped{
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne()
     @JoinColumn(name = "store_id", nullable = false)
     private Store store;
 

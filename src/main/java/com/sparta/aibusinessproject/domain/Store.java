@@ -77,7 +77,7 @@ public class Store extends Timestamped {
         this.deliveryAddress = request.deliveryAddress() != null ? request.deliveryAddress() : this.deliveryAddress;
     }
 
-    public void categoryUpdate(StoreCategoryDto dto){
-        this.storeCategories = dto.categories();
+    public void categoryUpdate(StoreCategory storeCategory){
+        storeCategories.add(storeCategory);
     }
 }

@@ -11,6 +11,7 @@ import com.sparta.aibusinessproject.domain.response.StoreSearchResponse;
 import com.sparta.aibusinessproject.exception.ApplicationException;
 import com.sparta.aibusinessproject.exception.ErrorCode;
 import com.sparta.aibusinessproject.repository.CategoryRepository;
+import com.sparta.aibusinessproject.repository.StoreCategoryRepository;
 import com.sparta.aibusinessproject.repository.StoreRepository;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.exception.SQLGrammarException;
@@ -32,6 +33,7 @@ public class StoreService {
 
     private final StoreRepository storeRepository;
     private final CategoryRepository categoryRepository;
+    private final StoreCategoryRepository storeCategoryRepository;
 
     // 가게 추가
     @Transactional
@@ -84,33 +86,45 @@ public class StoreService {
     }
 
     // 가게에 대한 카테고리 생성
-    public StoreCategoryDto createStoreCategory(UUID storeId, CategoryListCreateRequest request) {
+    @Transactional
+    public void createStoreCategory(UUID storeId, CategoryListCreateRequest request) {
         Store store = storeRepository.findById(storeId)
                 .orElseThrow(() -> new ApplicationException(ErrorCode.INVALID_STORE));
 
-        List<StoreCategory> storeCategories = List.of();
-        
+        List<StoreCategory> storeCategories;
+
+        // StoreCategory가 존재하는지 확인, 존재하지 않다면 새 리스트 생성 / 존재한다면 기존 리스트 가져옴
+        if(store.getStoreCategories().isEmpty()){
+            storeCategories = new ArrayList<>();
+        }else{
+            storeCategories = store.getStoreCategories();
+        }
+
+
+
         // 카테고리 신규 생성 / 기존 값 호출
+        Optional<Category> category = categoryRepository.findByName(request.categories());
+        Category categoryEntity;
 
-            Optional<Category> category = categoryRepository.findByName(request.categories());
-            Category categoryEntity;
+        if(category.isEmpty()) {
+            categoryEntity = categoryService.addCategory(new CategoryCreateRequest(request.categories()));
+        }else{
+            categoryEntity = category.get();
+        }
 
-            if(category.isEmpty()) {
-                categoryEntity = categoryService.addCategory(new CategoryCreateRequest(request.categories()));
-            }else{
-                categoryEntity = category.get();
+
+        // StoreCategory Entity 생성
+
+        // 이미 존재하는 가게에 대한 카테고리인지 확인
+        for(StoreCategory storeCategory : storeCategories){
+            if(storeCategory.getCategory().getId().equals(categoryEntity.getId())){
+                throw new ApplicationException(ErrorCode.ALREADY_CATEGORY);
             }
+        }
 
-            // StoreCategory Entity 생성
-            StoreCategory storeCategory = new StoreCategory(categoryEntity,store);
+        StoreCategory storeCategory = storeCategoryRepository.save(new StoreCategory(categoryEntity,store));
 
-            storeCategories.add(storeCategory);
+        store.categoryUpdate(storeCategory);
 
-
-        StoreCategoryDto dto = StoreCategoryDto.from(store, storeCategories);
-
-        store.categoryUpdate(dto);
-
-        return dto;
     }
 }

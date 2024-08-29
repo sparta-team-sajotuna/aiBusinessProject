@@ -31,6 +31,7 @@ public record StoreDto(
                 .operationHours(dto.operationHours)
                 .closedDays(dto.closedDays)
                 .deliveryAddress(dto.deliveryAddress)
+                .storeCategories(null)
                 .build();
     }
 

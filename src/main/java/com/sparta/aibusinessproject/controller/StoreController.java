@@ -58,9 +58,11 @@ public class StoreController {
 
     // 가게주인 카테고리 추가
     @PostMapping("/{storeId}/category")
-    public Response<StoreCategoryDto> createStoreCategory(@PathVariable UUID storeId, @RequestBody CategoryListCreateRequest request) {
+    public Response<?> createStoreCategory(@PathVariable UUID storeId, @RequestBody CategoryListCreateRequest request) {
 
-        return Response.success(storeService.createStoreCategory(storeId,request));
+//        return Response.success(storeService.createStoreCategory(storeId,request));
+        storeService.createStoreCategory(storeId,request);
+        return Response.success("성공");
     }
 
 }

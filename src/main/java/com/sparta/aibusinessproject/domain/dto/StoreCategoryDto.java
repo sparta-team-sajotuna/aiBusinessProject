@@ -44,7 +44,7 @@ public record StoreCategoryDto(
     }
 
     // category 생성 후
-    public static StoreCategoryDto from(Store store, List<StoreCategory> categories) {
+    public static StoreCategoryDto from(Store store) {
         return StoreCategoryDto.builder()
                 .name(store.getName())
                 .address(store.getAddress())
@@ -54,7 +54,7 @@ public record StoreCategoryDto(
                 .operationHours(store.getOperationHours())
                 .closedDays(store.getClosedDays())
                 .deliveryAddress(store.getDeliveryAddress())
-                .categories(categories)
+                .categories(store.getStoreCategories())
 //                .user(dto.user)
                 .build();
     }

@@ -9,7 +9,7 @@ public record StoreCreateRequest(
         String phone,
         String content,
         int minDeliveryPrice,
-        String operationHousrs,
+        String operationHours,
         String closedDays,
         String deliveryAddress,
         String category
@@ -23,7 +23,7 @@ public record StoreCreateRequest(
                 .phone(request.phone())
                 .content(request.content())
                 .minDeliveryPrice(request.minDeliveryPrice())
-                .operationHours(request.operationHousrs())
+                .operationHours(request.operationHours())
                 .closedDays(request.closedDays())
                 .deliveryAddress(request.deliveryAddress())
                 .build();
