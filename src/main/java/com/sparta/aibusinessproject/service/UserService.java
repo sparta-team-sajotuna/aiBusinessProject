@@ -1,5 +1,6 @@
 package com.sparta.aibusinessproject.service;
 
+import com.sparta.aibusinessproject.domain.User;
 import com.sparta.aibusinessproject.domain.response.UserInfoResponse;
 import com.sparta.aibusinessproject.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +17,8 @@ public class UserService {
     private final UserRepository userRepository;
 
     public UserInfoResponse getUserInfo(String userId) {
-        userRepository.findById(userId).orElseThrow(()-> new NoSuchElementException("해당 유저는 존재하지 않습니다."));
-        return null;
+        User user = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("해당 유저는 존재하지 않습니다."));
+
+        return UserInfoResponse.toUserInfoResponse(user);
     }
 }

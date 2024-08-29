@@ -12,7 +12,6 @@ public enum ErrorCode {
     DUPLICATED_PHONE(HttpStatus.CONFLICT, "휴대폰 번호가 중복됩니다."),
     DUPLICATED_EMAIL(HttpStatus.CONFLICT, "Email이 중복됩니다."),
     DUPLICATED_USERID(HttpStatus.CONFLICT, "USER ID가 중복됩니다."),
-    DUPLICATED_USERID(HttpStatus.CONFLICT, "USER ID가 중복됩니다."),
     INVALID(HttpStatus.BAD_REQUEST, "다시 시도해 주세요."),
 
     INVALID_ORDER(HttpStatus.NOT_FOUND, "유효하지 않은 주문입니다."),

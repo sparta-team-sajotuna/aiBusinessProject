@@ -35,7 +35,7 @@ public class JwtUtil {
     // Token 식별자
     public static final String BEARER_PREFIX = "Bearer ";
     // Access Token 만료기간
-    private final long ACCESS_TOKEN_TIME = 60 * 60 * 1000L; // 60분
+    private final long ACCESS_TOKEN_TIME = 7*24 * 60 * 60 * 1000L; // 60분 * 7
     // Refresh Token 만료기간
     private final long REFRESH_TOKEN_TIME = 7 * 24 * 60 * 60 * 1000L; // 7일
 
@@ -91,7 +91,7 @@ public class JwtUtil {
     public String getAccessTokenFromHeader(HttpServletRequest request) {
         String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_PREFIX)) {
-            return bearerToken.substring(7); // 순수한 토큰 가져오기 위해 substring(BEARER 자름)
+            return bearerToken.substring(7).trim(); // 순수한 토큰 가져오기 위해 substring(BEARER 자름)
         }
         return null;
     }
