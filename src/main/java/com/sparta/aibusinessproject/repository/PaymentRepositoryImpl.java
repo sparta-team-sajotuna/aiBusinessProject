@@ -79,7 +79,7 @@ public class PaymentRepositoryImpl implements PaymentRepositoryCustom {
                         orders.add(new OrderSpecifier<>(direction, payment.createdAt));
                         break;
                     case "updatedAt":
-                        orders.add(new OrderSpecifier<>(direction, payment.modifiedAt));
+                        orders.add(new OrderSpecifier<>(direction, payment.updatedAt));
                         break;
                     case "payAmount":
                         orders.add(new OrderSpecifier<>(direction, payment.payAmount));
