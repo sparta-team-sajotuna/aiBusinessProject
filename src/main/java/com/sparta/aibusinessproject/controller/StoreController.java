@@ -25,8 +25,8 @@ public class StoreController {
     // 가게 생성
     @PostMapping
     public Response<?> store(@RequestBody StoreCreateRequest request) {
-        storeService.createOrder(request);
-        return  Response.success("가게 생성에 성공하였습니다");
+
+        return  Response.success(storeService.createOrder(request) +"가게의 정보가 생성되었습니다");
     }
 
     // 가게 상세 조회

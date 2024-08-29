@@ -5,6 +5,8 @@ import com.sparta.aibusinessproject.domain.response.StoreSearchListResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.UUID;
+
 public interface StoreRepositoryCustom {
-    Page<StoreSearchListResponse> searchStores(StoreSearchListRequest searchDto, Pageable pageable);
+    Page<StoreSearchListResponse> searchStores(StoreSearchListRequest searchDto, Pageable pageable, UUID categoryId);
 }
