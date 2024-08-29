@@ -1,14 +1,13 @@
 package com.sparta.aibusinessproject.domain.response;
 
-import com.sparta.aibusinessproject.domain.Menu;
 import com.sparta.aibusinessproject.domain.Order;
 import com.sparta.aibusinessproject.domain.OrderMenu;
 import com.sparta.aibusinessproject.domain.OrderStatusEnum;
-import com.sparta.aibusinessproject.domain.request.OrderCreateRequest;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,18 +17,30 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class OrderCreateResponse {
+public class OrderFindResponse {
+    //TODO
+    //private Store store;
 
     private UUID orderId;
-    private String storeName;
+    private String paymentMethod;
+
     private int totalPrice;
+
+    private String requests;
+
     private OrderStatusEnum status;
 
-    public static OrderCreateResponse fromEntity(Order order) {
-        return OrderCreateResponse.builder()
+    private List<MenuInfoResponse> menuList = new ArrayList<>();
+
+    public static OrderFindResponse fromEntity(Order order) {
+        return OrderFindResponse.builder()
                 .orderId(order.getId())
+                .paymentMethod(order.getPaymentMethod())
                 .totalPrice(order.getTotalPrice())
+                .requests(order.getRequests())
                 .status(order.getStatus())
+                .menuList(order.getOrderMenuList().stream()
+                        .map(OrderMenu::toMenuInfo).toList())
                 .build();
     }
 }
