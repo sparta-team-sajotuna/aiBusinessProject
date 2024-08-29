@@ -7,11 +7,13 @@ import com.sparta.aibusinessproject.domain.request.OrderSearchRequest;
 import com.sparta.aibusinessproject.domain.response.OrderCreateResponse;
 import com.sparta.aibusinessproject.domain.response.OrderFindResponse;
 import com.sparta.aibusinessproject.exception.Response;
+import com.sparta.aibusinessproject.security.UserDetailsImpl;
 import com.sparta.aibusinessproject.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -24,9 +26,14 @@ public class OrderController {
 
     private final OrderService orderService;
 
+    /**
+     * 주문 단건 주문
+     * @param orderId
+     * @return
+     */
     @GetMapping("/{orderId}")
-    public Response<OrderFindResponse> findOrder(@PathVariable UUID orderId){
-        return Response.success(orderService.findOrder(orderId));
+    public Response<OrderFindResponse> findOrder(@PathVariable UUID orderId, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return Response.success(orderService.findOrder(orderId, userDetails.getUser()));
     }
 
     @GetMapping
@@ -38,9 +45,14 @@ public class OrderController {
         return Response.success(orderService.findAllOrders(searchDto, pageable, role, userId));
     }
 
+    /**
+     * 주문 생성
+     * @param requestDto
+     * @return
+     */
     @PostMapping
-    public Response<OrderCreateResponse> createOrder(@RequestBody OrderCreateRequest requestDto) {
-        return Response.success(orderService.createStore(requestDto));
+    public Response<OrderCreateResponse> createOrder(@RequestBody OrderCreateRequest requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return Response.success(orderService.createStore(requestDto, userDetails.getUser()));
     }
 
     @DeleteMapping("/{orderId}")

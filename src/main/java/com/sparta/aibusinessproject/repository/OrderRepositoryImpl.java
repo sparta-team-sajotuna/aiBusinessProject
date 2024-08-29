@@ -81,7 +81,7 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
                         orders.add(new OrderSpecifier<>(direction, QOrder.order.createdAt));
                         break;
                     case "modifiedAt":
-                        orders.add(new OrderSpecifier<>(direction, QOrder.order.modifiedAt));
+                        orders.add(new OrderSpecifier<>(direction, order.updatedAt));
                         break;
                     default:
                         break;

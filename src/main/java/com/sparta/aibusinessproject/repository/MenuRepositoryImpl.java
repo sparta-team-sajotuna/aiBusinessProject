@@ -94,7 +94,7 @@ public class MenuRepositoryImpl implements MenuRepositoryCustom {
                         orders.add(new OrderSpecifier<>(direction, menu.createdAt));
                         break;
                     case "updatedAt":
-                        orders.add(new OrderSpecifier<>(direction, menu.modifiedAt));
+                        orders.add(new OrderSpecifier<>(direction, menu.updatedAt));
                         break;
                     case "price":
                         orders.add(new OrderSpecifier<>(direction, menu.price));

@@ -52,7 +52,7 @@ public class MenuController {
      */
     @PostMapping
     public Response<MenuCreateResponse> createMenu(@PathVariable UUID storeId, @RequestBody MenuCreateRequest requestDto) {
-        return Response.success(menuService.createStore(storeId, requestDto));
+        return Response.success(menuService.createMenu(storeId, requestDto));
     }
 
     /**
@@ -64,7 +64,7 @@ public class MenuController {
      */
     @PatchMapping("/{menuId}")
     public Response<MenuUpdateResponse> modifyMenu(@PathVariable UUID storeId, @PathVariable UUID menuId, @RequestBody MenuModifyRequest requestDto){
-        return Response.success(menuService.modifyStore(storeId,menuId,requestDto));
+        return Response.success(menuService.modifyMenu(storeId,menuId,requestDto));
     }
 
     /**
@@ -75,7 +75,7 @@ public class MenuController {
      */
     @DeleteMapping("/{menuId}")
     public Response<UUID> deleteMenu(@PathVariable UUID storeId, @PathVariable UUID menuId){
-        return Response.success(menuService.deleteStore(storeId,menuId));
+        return Response.success(menuService.deleteMenu(storeId,menuId));
     }
 }
 

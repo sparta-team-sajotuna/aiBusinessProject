@@ -13,7 +13,6 @@ public enum ErrorCode {
     DUPLICATED_EMAIL(HttpStatus.CONFLICT, "Email이 중복됩니다."),
 
     DUPLICATED_USERNAME(HttpStatus.CONFLICT, "userName 이 중복됩니다."),
-    INVALID_PASSWORD(HttpStatus.NOT_FOUND, "패스워드가 잘못되었습니다."),
 
     DUPLICATED_STORENAME(HttpStatus.CONFLICT, "가게 이름이 중복됩니다."),
     INVALID_STORE(HttpStatus.NOT_FOUND,"가게 정보가 없습니다."),
@@ -21,14 +20,17 @@ public enum ErrorCode {
     DUPLICATED_CATEGORY(HttpStatus.CONFLICT, "카테고리 이름이 중복됩니다."),
     NOTFOUND_CATEGORY(HttpStatus.NOT_FOUND,"카테고리가 존재하지 않습니다."),
     DEFAULT_VALUE(HttpStatus.BAD_REQUEST, "기본 카테고리 종류 이므로 변경이 불가능합니다."),
-    ALREADY_CATEGORY(HttpStatus.ALREADY_REPORTED, "이미 존재하는 카테고리 입니다");
+    ALREADY_CATEGORY(HttpStatus.ALREADY_REPORTED, "이미 존재하는 카테고리 입니다"),
 
     DUPLICATED_USERID(HttpStatus.CONFLICT, "USER ID가 중복됩니다."),
     INVALID(HttpStatus.BAD_REQUEST, "다시 시도해 주세요."),
 
     INVALID_ORDER(HttpStatus.NOT_FOUND, "유효하지 않은 주문입니다."),
     INVALID_MENU(HttpStatus.NOT_FOUND, "유효하지 않은 메뉴입니다."),
+    INVALID_QUANTITY(HttpStatus.NOT_FOUND, "재고가 부족하여 주문이 불가능합니다. 수량을 확인해주세요"),
     ORDER_CANCELLATION_NOT_ALLOWED_TIME(HttpStatus.BAD_REQUEST, "5분 이내에 취소가 가능합니다."),
+    NOTFOUND_MENU(HttpStatus.NOT_FOUND, "해당 가게에 존재하지 않는 메뉴입니다."),
+    EXCEED_TOTAL_PRICE(HttpStatus.BAD_REQUEST, "해당 가게에 존재하지 않는 메뉴입니다."),
 
     INVALID_USERID(HttpStatus.BAD_REQUEST, "아이디를 형식에 맞게 입력해 주세요."),
     INVALID_PASSWORD(HttpStatus.BAD_REQUEST, "비밀번호를 형식에 맞게 입력해 주세요."),

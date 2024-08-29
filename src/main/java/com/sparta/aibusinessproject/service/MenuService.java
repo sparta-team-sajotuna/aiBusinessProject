@@ -22,8 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
-import static com.sparta.aibusinessproject.exception.ErrorCode.INVALID_MENU;
-import static com.sparta.aibusinessproject.exception.ErrorCode.INVALID_ORDER;
+import static com.sparta.aibusinessproject.exception.ErrorCode.*;
 
 @Service
 @RequiredArgsConstructor
@@ -46,7 +45,7 @@ public class MenuService {
     }
 
     @Transactional
-    public MenuCreateResponse createStore(UUID storeId, MenuCreateRequest requestDto) {
+    public MenuCreateResponse createMenu(UUID storeId, MenuCreateRequest requestDto) {
 
         Menu menu = MenuCreateRequest.toEntity(requestDto,
                 storeRepository.findById(storeId)
@@ -59,7 +58,7 @@ public class MenuService {
     }
 
     @Transactional
-    public MenuUpdateResponse modifyStore(UUID storeId, UUID menuId, MenuModifyRequest requestDto) {
+    public MenuUpdateResponse modifyMenu(UUID storeId, UUID menuId, MenuModifyRequest requestDto) {
 
         Menu menu = menuRepository.findById(menuId)
                 .filter(p->p.getDeletedAt() == null && p.getStore().getId().equals(storeId))
@@ -71,7 +70,7 @@ public class MenuService {
     }
 
     @Transactional
-    public UUID deleteStore(UUID storeId, UUID menuId) {
+    public UUID deleteMenu(UUID storeId, UUID menuId) {
 
         Menu menu = menuRepository.findById(menuId)
                 .filter(p->p.getDeletedAt() == null && p.getStore().getId().equals(storeId))
@@ -81,5 +80,18 @@ public class MenuService {
         // TODO 하드코딩 수정
         menu.deleteMenu("username");
         return menuRepository.save(menu).getId();
+    }
+
+    @Transactional
+    public void reduceMenuQuantity(UUID menuId, int quantity) {
+        Menu menu = menuRepository.findById(menuId)
+                .orElseThrow(() -> new ApplicationException(INVALID_MENU));
+
+        if (menu.getQuantity() < quantity) {
+            throw new ApplicationException(INVALID_QUANTITY);
+        }
+
+        menu.reduceQuantity(quantity);
+        menuRepository.save(menu);
     }
 }

@@ -2,6 +2,7 @@ package com.sparta.aibusinessproject.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sparta.aibusinessproject.domain.request.MenuModifyRequest;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,11 +25,15 @@ public class Menu extends Timestamped {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false)
     private int price;
 
-    // TODO 가게랑 매핑
+    @Column(nullable = false)
+    private int quantity;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_id")
     private Store store;
@@ -36,16 +41,17 @@ public class Menu extends Timestamped {
     @OneToMany(mappedBy = "menu", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderMenu> orderMenuList = new ArrayList<>();
 
-    private LocalDateTime deletedAt;
-    private String deletedBy;
-
     public void modifyMenu(MenuModifyRequest requestDto) {
         this.name = requestDto.getName();
         this.price = requestDto.getPrice();
     }
 
     public void deleteMenu(String deletedBy){
-        this.deletedAt = LocalDateTime.now();
-        this.deletedBy = deletedBy;
+        this.setDeletedAt(LocalDateTime.now());
+        this.setDeletedBy(deletedBy);
+    }
+
+    public void reduceQuantity(int quantity) {
+        this.quantity = this.quantity-quantity;
     }
 }
