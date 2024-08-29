@@ -10,18 +10,18 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
-@RequiredArgsConstructor
-@RequestMapping("/api/v1/stores")
-public class OrderController {
-
-    private final OrderService orderService;
-
-    @PostMapping
-    public Response<OrderCreateResponse> createStore(@RequestBody OrderCreateRequest request){
-
-
-        return Response.success(new OrderCreateResponse());
-    }
-}
+//@RestController
+//@RequiredArgsConstructor
+//@RequestMapping("/api/v1/stores")
+//public class OrderController {
+//
+//    private final OrderService orderService;
+//
+//    @PostMapping
+//    public Response<OrderCreateResponse> createStore(@RequestBody OrderCreateRequest request){
+//
+//
+//        return Response.success(new OrderCreateResponse());
+//    }
+//}
 
