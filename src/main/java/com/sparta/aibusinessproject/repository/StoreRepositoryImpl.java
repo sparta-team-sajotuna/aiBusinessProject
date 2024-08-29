@@ -18,10 +18,13 @@ import org.springframework.data.domain.Sort;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static com.sparta.aibusinessproject.domain.QCategory.category;
 import static com.sparta.aibusinessproject.domain.QStore.store;
+import static com.sparta.aibusinessproject.domain.QStoreCategory.storeCategory;
+
 
 @RequiredArgsConstructor
 public class StoreRepositoryImpl implements StoreRepositoryCustom{
@@ -30,15 +33,15 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom{
 
 
     @Override
-    public Page<StoreSearchListResponse> searchStores(StoreSearchListRequest searchDto, Pageable pageable) {
+    public Page<StoreSearchListResponse> searchStores(StoreSearchListRequest searchDto, Pageable pageable, UUID categoryId) {
         // 정렬 기준 설정
         List<OrderSpecifier<?>> orders = getAllOrderSpecifiers(pageable);
 
         QueryResults<Store> results = queryFactory
                 .selectFrom(store)
-//                .leftJoin(store.categories, category)
+                .leftJoin(store.storeCategories, storeCategory)
                 .where(
-//                        categoryContains(searchDto.category()),
+                        categoryContains(categoryId),
                         locationContains(searchDto.deliveryAddress())
 //                        priceBetween(searchDto.getMinPrice(), searchDto.getMaxPrice()),
                 )
@@ -60,10 +63,12 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom{
     }
 
     // 카테고리 검색
-//    private BooleanExpression categoryContains(String categoryName) {
-//        // containsIgnoreCase : 문자열 검색을 수행하는 메서드, 대소문자를 구분하지 않음
-//        return categoryName != null ? category.name.contains(categoryName) : null;
-//    }
+    private BooleanExpression categoryContains(UUID categoryId) {
+        if (categoryId != null) {
+            return store.storeCategories.any().category.id.eq(categoryId);
+        }
+        return null; // categoryId가 null일 경우 null 반환
+    }
 
     // 주소 검색
     private BooleanExpression locationContains(String deliveryAddress) {

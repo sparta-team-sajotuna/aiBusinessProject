@@ -3,7 +3,6 @@ package com.sparta.aibusinessproject.service;
 import com.sparta.aibusinessproject.domain.Category;
 import com.sparta.aibusinessproject.domain.Store;
 import com.sparta.aibusinessproject.domain.StoreCategory;
-import com.sparta.aibusinessproject.domain.dto.StoreCategoryDto;
 import com.sparta.aibusinessproject.domain.dto.StoreDto;
 import com.sparta.aibusinessproject.domain.request.*;
 import com.sparta.aibusinessproject.domain.response.StoreSearchListResponse;
@@ -14,7 +13,6 @@ import com.sparta.aibusinessproject.repository.CategoryRepository;
 import com.sparta.aibusinessproject.repository.StoreCategoryRepository;
 import com.sparta.aibusinessproject.repository.StoreRepository;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.exception.SQLGrammarException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -37,23 +35,34 @@ public class StoreService {
 
     // 가게 추가
     @Transactional
-    public void createOrder(StoreCreateRequest requestDto) {
+    public String createOrder(StoreCreateRequest requestDto) {
         StoreDto dto = StoreCreateRequest.toDto(requestDto);
 
         // 존재하는 가게이름인지 확인
         Optional<Store> store = storeRepository.findByName(dto.name());
 
         // 존재하지 않다면
-        if(store.isEmpty()) {
-            Store storeEntity = storeRepository.save(StoreDto.toEntity(dto));
-        }else{
+        if(!store.isEmpty()) {
             throw new ApplicationException(ErrorCode.DUPLICATED_STORENAME);
         }
+        Store storeEntity = storeRepository.save(StoreDto.toEntity(dto));
+
+        return storeEntity.getName();
     }
 
     // 가게 리스트 출력
     public Page<StoreSearchListResponse> getStores(StoreSearchListRequest searchDto, Pageable pageable) {
-        return storeRepository.searchStores(searchDto, pageable);
+        Optional<Category> category = categoryRepository.findByName(searchDto.category());
+
+        UUID categoryId;
+
+        if(category.isEmpty()){
+            categoryId = null;
+        }else{
+            categoryId = category.get().getId();
+        }
+
+        return storeRepository.searchStores(searchDto, pageable , categoryId);
     }
 
     // 가게 세부 조회
@@ -62,7 +71,7 @@ public class StoreService {
         Store store = storeRepository.findById(storeId)
                 .orElseThrow(() -> new ApplicationException(ErrorCode.INVALID_STORE));
 
-            return  StoreSearchResponse.from(store);
+            return  new StoreSearchResponse(store);
     }
 
     // 가게 수정
@@ -101,7 +110,6 @@ public class StoreService {
         }
 
 
-
         // 카테고리 신규 생성 / 기존 값 호출
         Optional<Category> category = categoryRepository.findByName(request.categories());
         Category categoryEntity;
@@ -112,7 +120,6 @@ public class StoreService {
             categoryEntity = category.get();
         }
 
-
         // StoreCategory Entity 생성
 
         // 이미 존재하는 가게에 대한 카테고리인지 확인
@@ -121,10 +128,7 @@ public class StoreService {
                 throw new ApplicationException(ErrorCode.ALREADY_CATEGORY);
             }
         }
-
         StoreCategory storeCategory = storeCategoryRepository.save(new StoreCategory(categoryEntity,store));
-
         store.categoryUpdate(storeCategory);
-
     }
 }
