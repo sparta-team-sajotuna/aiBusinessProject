@@ -24,11 +24,13 @@ repositories {
 }
 
 ext {
+
+    set('springCloudVersion', "2023.0.2")
     set('querydslVersion', "5.0.0")  // QueryDSL 버전 명시적으로 설정
 }
 
 dependencies {
-    // queryDSL
+    // queryDsl
     implementation "com.querydsl:querydsl-jpa:${querydslVersion}:jakarta"
     annotationProcessor "com.querydsl:querydsl-apt:${querydslVersion}:jakarta"
     annotationProcessor "jakarta.annotation:jakarta.annotation-api"

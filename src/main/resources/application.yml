@@ -15,6 +15,7 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
+        highlight_sql: true
   data:
     redis:
       host: localhost
@@ -25,8 +26,10 @@ logging:
   level:
     org:
       hibernate:
-        SQL: DEBUG
-        type: TRACE
+        orm:
+          jdbc:
+            bind: trace
+
 jwt:
   secret:
     key: ${JWT_SECRET_KEY}

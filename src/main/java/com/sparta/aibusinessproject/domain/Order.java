@@ -37,13 +37,13 @@ public class Order extends Timestamped {
     private LocalDateTime deletedAt;
     private String deletedBy;
 
-    /* 유저랑 매핑
+    /* TODO 유저랑 매핑
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;*/
 
 
-    /* 가게랑 매핑
+    /* TODO 가게랑 매핑
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private Store store;*/
