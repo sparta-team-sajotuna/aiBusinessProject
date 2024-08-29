@@ -20,6 +20,10 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)
 //  EntityListeners = 엔티티를 데이터베이스에 적용하기 전후로 콜백을 요청할 수 있게하는 어노테이션
 //  AuditingEntityListener = 엔티티의  Auditing 정보를 중비하는 JPA 엔티티 리스너 클래스
+@Getter
+@MappedSuperclass
+@EntityListeners(AuditingEntityListener.class)
+
 public class Timestamped {
 
     @CreatedDate
@@ -31,8 +35,9 @@ public class Timestamped {
     @LastModifiedDate
     @Column
     @Temporal(TemporalType.TIMESTAMP)
-    private LocalDateTime updatedAt;
-    private String updatedBy;
+  
+    private LocalDateTime modifiedAt;
+    private String modifiedBy;
 
     private LocalDateTime deletedAt;
     private String deletedBy;
@@ -40,11 +45,11 @@ public class Timestamped {
     @PrePersist     // 해당 엔티티를 저장하기 이전에 실행
     public void onPrePersist(){
         this.createdAt = LocalDateTime.now();
-        this.updatedAt = this.createdAt;
+        this.modifiedAt = this.createdAt;
     }
 
     @PreUpdate      // 해당 엔티티를 업데이트 하기 이전에 실행
     public void onPreUpdate(){
-        this.updatedAt = LocalDateTime.now();
+        this.modifiedAt = LocalDateTime.now();
     }
 }
