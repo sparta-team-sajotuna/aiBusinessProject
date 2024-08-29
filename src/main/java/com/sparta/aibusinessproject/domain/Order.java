@@ -52,9 +52,7 @@ public class Order extends Timestamped {
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderMenu> orderMenuList = new ArrayList<>();
 
-    public void deleteOrder(String deletedBy){
-        this.setDeletedBy(deletedBy);
-        this.setDeletedAt(LocalDateTime.now());
+    public void cancelOrder(){
         modifyOrderStatus(OrderStatusEnum.CANCELLED);
     }
 

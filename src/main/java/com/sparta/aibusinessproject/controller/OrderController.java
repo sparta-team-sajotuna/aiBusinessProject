@@ -1,6 +1,7 @@
 package com.sparta.aibusinessproject.controller;
 
 import com.sparta.aibusinessproject.domain.Address;
+import com.sparta.aibusinessproject.domain.User;
 import com.sparta.aibusinessproject.domain.request.OrderCreateRequest;
 import com.sparta.aibusinessproject.domain.request.OrderModifyRequest;
 import com.sparta.aibusinessproject.domain.request.OrderSearchRequest;
@@ -27,26 +28,27 @@ public class OrderController {
     private final OrderService orderService;
 
     /**
-     * 주문 단건 주문
+     * 주문 단건 조회
+     *
      * @param orderId
      * @return
      */
     @GetMapping("/{orderId}")
-    public Response<OrderFindResponse> findOrder(@PathVariable UUID orderId, @AuthenticationPrincipal UserDetailsImpl userDetails){
+    public Response<OrderFindResponse> findOrder(@PathVariable UUID orderId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return Response.success(orderService.findOrder(orderId, userDetails.getUser()));
     }
 
     @GetMapping
-    public Response<Page<OrderFindResponse>> findOrders(OrderSearchRequest searchDto, @PageableDefault(size = 10) Pageable pageable){
-        //TODO 안지연
-        // - 하드코딩 수정
-        String role = "CUSTOMER";
-        String userId = "user";
-        return Response.success(orderService.findAllOrders(searchDto, pageable, role, userId));
+    public Response<Page<OrderFindResponse>> findOrders(OrderSearchRequest searchDto,
+                                                        @PageableDefault(size = 10) Pageable pageable,
+                                                        @AuthenticationPrincipal UserDetailsImpl userDetails) {
+
+        return Response.success(orderService.findAllOrders(searchDto, pageable, userDetails.getUser()));
     }
 
     /**
      * 주문 생성
+     *
      * @param requestDto
      * @return
      */
@@ -55,16 +57,39 @@ public class OrderController {
         return Response.success(orderService.createStore(requestDto, userDetails.getUser()));
     }
 
-    @DeleteMapping("/{orderId}")
-    public Response<UUID> deleteOrder(@PathVariable UUID orderId){
-        return Response.success(orderService.deleteOrder(orderId));
-    }
-
+    /**
+     * 주문 취소
+     *
+     * @param orderId
+     * @return
+     */
     @PatchMapping("/{orderId}")
-    public Response<UUID> modify(@PathVariable UUID orderId, @RequestBody OrderModifyRequest requestDto){
-        return Response.success(orderService.modifyOrderStatus(orderId, requestDto.getStatus()));
+    public Response<UUID> cancelOrder(@PathVariable UUID orderId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return Response.success(orderService.cancelOrder(orderId, userDetails.getUser()));
     }
 
+    /**
+     * 주문 상태 변경
+     *
+     * @param orderId
+     * @param requestDto
+     * @return
+     */
+    @PatchMapping("/{orderId}/status")
+    public Response<UUID> modifyOrderStatus(@PathVariable UUID orderId, @RequestBody OrderModifyRequest requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return Response.success(orderService.modifyOrderStatus(orderId, requestDto.getStatus(), userDetails.getUser()));
+    }
+
+    /**
+     * 주문 삭제
+     * @param orderId
+     * @return
+     */
+    @DeleteMapping("{orderId}")
+    public Response<?> deleteOrder(@PathVariable UUID orderId, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        orderService.deleteOrder(orderId, userDetails.getUser());
+        return Response.success("주문 정보가 삭제되었습니다.");
+    }
 }
 
 
