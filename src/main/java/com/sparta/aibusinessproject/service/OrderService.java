@@ -63,7 +63,7 @@ public class OrderService {
     @Transactional
     public OrderCreateResponse createStore(OrderCreateRequest requestDto, User user) {
         // (1) 접근 권한 검증
-        if(!user.getRole().equals(UserRoleEnum.CUSTOMER) && !user.getRole().equals(UserRoleEnum.OWNER)){
+        if(user.getRole().equals(UserRoleEnum.MANAGER) || user.getRole().equals(UserRoleEnum.MASTER)){
             throw new ApplicationException(ACCESS_DENIED);
         }
 
@@ -106,7 +106,7 @@ public class OrderService {
     @Transactional
     public UUID cancelOrder(UUID orderId, User user) {
         // (1) 접근 권한 검증
-        if(!user.getRole().equals(UserRoleEnum.CUSTOMER) && !user.getRole().equals(UserRoleEnum.OWNER)){
+        if(user.getRole().equals(UserRoleEnum.MANAGER) || user.getRole().equals(UserRoleEnum.MASTER)){
             throw new ApplicationException(ACCESS_DENIED);
         }
 
@@ -133,7 +133,7 @@ public class OrderService {
 
     @Transactional
     public UUID modifyOrderStatus(UUID orderId, OrderStatusEnum status, User user) {
-        if(!user.getRole().equals(UserRoleEnum.CUSTOMER) && !user.getRole().equals(UserRoleEnum.OWNER)){
+        if(user.getRole().equals(UserRoleEnum.MANAGER) || user.getRole().equals(UserRoleEnum.MASTER)){
             throw new ApplicationException(ACCESS_DENIED);
         }
 
@@ -151,7 +151,7 @@ public class OrderService {
 
     @Transactional
     public void deleteOrder(UUID orderId, User user){
-        if(!user.getRole().equals(UserRoleEnum.CUSTOMER) && !user.getRole().equals(UserRoleEnum.OWNER)){
+        if(user.getRole().equals(UserRoleEnum.MANAGER) || user.getRole().equals(UserRoleEnum.MASTER)){
             throw new ApplicationException(ACCESS_DENIED);
         }
 

@@ -42,8 +42,9 @@ public class Menu extends Timestamped {
     private List<OrderMenu> orderMenuList = new ArrayList<>();
 
     public void modifyMenu(MenuModifyRequest requestDto) {
-        this.name = requestDto.getName();
-        this.price = requestDto.getPrice();
+        if(requestDto.getName() != null) this.name = requestDto.getName();
+        if(requestDto.getQuantity() != null) this.quantity = requestDto.getQuantity();
+        if(requestDto.getPrice() != null) this.price = requestDto.getPrice();
     }
 
     public void deleteMenu(String deletedBy){

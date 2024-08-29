@@ -41,7 +41,6 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
                 .leftJoin(orderMenu.menu, menu).fetchJoin() //menu 조인
                 .where(
                         statusEq(searchDto.getStatus()),
-                        order.deletedAt.isNull(),
                         userCheck(role, userId)
                 )
                 .orderBy(orders.toArray(new OrderSpecifier[0]))
