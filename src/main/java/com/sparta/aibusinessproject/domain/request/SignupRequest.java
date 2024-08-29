@@ -1,5 +1,7 @@
 package com.sparta.aibusinessproject.domain.request;
 
+import com.sparta.aibusinessproject.domain.User;
+import com.sparta.aibusinessproject.domain.UserRoleEnum;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -41,5 +43,17 @@ public class SignupRequest {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    // SignupRequest를 User 객체로 변환하는 메서드
+    public static User toEntity(SignupRequest signupRequest, UserRoleEnum role) {
+        return User.builder()
+                .userId(signupRequest.getUserId())
+                .password(signupRequest.getPassword()) // 비밀번호는 암호화 후 저장할 것
+                .name(signupRequest.getName())
+                .phone(signupRequest.getPhone())
+                .email(signupRequest.getEmail())
+                .role(role) // 기본 역할 설정 예시
+                .build();
     }
 }

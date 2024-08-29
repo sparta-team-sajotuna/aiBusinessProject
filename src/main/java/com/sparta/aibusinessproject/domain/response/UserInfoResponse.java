@@ -6,6 +6,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Builder
 @Getter
 @NoArgsConstructor
@@ -17,7 +20,7 @@ public class UserInfoResponse {
     String email;
     String role;
 
-    public static UserInfoResponse toUserInfoResponse(User user) {
+    public static UserInfoResponse from(User user) {
         return UserInfoResponse.builder()
                 .userId(user.getUserId())
                 .name(user.getName())
