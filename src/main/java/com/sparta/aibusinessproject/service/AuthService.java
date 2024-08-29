@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-@Slf4j
+@Slf4j(topic = "Auth Service")
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -23,32 +23,32 @@ public class AuthService {
     @Value("${owner.token}")
     private String ownerToken;
 
-    public void signup(SignupRequest signupRequestDto) {
+    public void signup(SignupRequest signupRequest) {
         // ID 중복 확인
-        if (userRepository.existsById(signupRequestDto.getUserId())) {
+        if (userRepository.existsById(signupRequest.getUserId())) {
             throw new NotValidException(ErrorCode.DUPLICATED_USERID);
         }
         // PASSWORD 암호화
-        String password = passwordEncoder.encode(signupRequestDto.getPassword());
-        signupRequestDto.setPassword(password);
+        String password = passwordEncoder.encode(signupRequest.getPassword());
+        signupRequest.setPassword(password);
         // PHONE 중복 확인
-        if (userRepository.existsByPhone(signupRequestDto.getPhone())) {
+        if (userRepository.existsByPhone(signupRequest.getPhone())) {
             throw new NotValidException(ErrorCode.DUPLICATED_PHONE);
         }
         // EMAIL 중복 확인
-        if (userRepository.existsByEmail(signupRequestDto.getEmail())) {
+        if (userRepository.existsByEmail(signupRequest.getEmail())) {
             throw new NotValidException(ErrorCode.DUPLICATED_EMAIL);
         }
         // 사용자 ROLE 확인 // owner 값이 true이면 token이 있음.
         UserRoleEnum role = UserRoleEnum.CUSTOMER;
-        if (signupRequestDto.isOwner()) {
-            if (!ownerToken.equals(signupRequestDto.getOwnerToken())) {
+        if (signupRequest.isOwner()) {
+            if (!ownerToken.equals(signupRequest.getOwnerToken())) {
                 throw new NotValidException(ErrorCode.INVALID_TOKEN);
             }
             role = UserRoleEnum.OWNER;
         }
 
-        userRepository.save(User.fromSignupRequestDto(signupRequestDto, role));
+        userRepository.save(SignupRequest.toEntity(signupRequest, role));
     }
 
 }
