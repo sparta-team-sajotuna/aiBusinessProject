@@ -1,7 +1,5 @@
 package com.sparta.aibusinessproject.controller;
 
-import com.sparta.aibusinessproject.domain.User;
-import com.sparta.aibusinessproject.domain.UserRoleEnum;
 import com.sparta.aibusinessproject.domain.request.PaymentCallbackRequest;
 import com.sparta.aibusinessproject.domain.request.PaymentCancelRequest;
 import com.sparta.aibusinessproject.domain.response.PaymentCreateResponse;
@@ -10,13 +8,15 @@ import com.sparta.aibusinessproject.domain.response.PaymentSearchRequest;
 import com.sparta.aibusinessproject.exception.Response;
 import com.sparta.aibusinessproject.security.UserDetailsImpl;
 import com.sparta.aibusinessproject.service.PaymentService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.UUID;
 
 
@@ -24,6 +24,10 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/payments")
 public class PaymentController {
+
+    private static final int[] ALLOWED_PAGE_SIZES = {10, 30, 50};
+    private static final int DEFAULT_PAGE_SIZE = 10;
+
     private final PaymentService paymentService;
 
     /**
@@ -46,10 +50,17 @@ public class PaymentController {
      */
     @GetMapping
     public Response<Page<PaymentFindResponse>> findOrders(PaymentSearchRequest searchDto,
-                                                          @PageableDefault(size = 10) Pageable pageable,
+                                                          Pageable pageable,
                                                           @AuthenticationPrincipal UserDetailsImpl userDetails){
 
-        return Response.success(paymentService.findAllPayments(searchDto, pageable, userDetails.getUser()));
+        int size = DEFAULT_PAGE_SIZE; // 기본 10건
+        if(Arrays.stream(ALLOWED_PAGE_SIZES).anyMatch(s->s == pageable.getPageSize())){ //요청 사이즈가 10, 30, 50일 때
+            size = pageable.getPageSize();
+        }
+
+        Pageable validatedPageable = PageRequest.of(pageable.getPageNumber(), size, pageable.getSort());
+
+        return Response.success(paymentService.findAllPayments(searchDto, validatedPageable, userDetails.getUser()));
     }
 
     /**
@@ -59,7 +70,7 @@ public class PaymentController {
      * @return
      */
     @PostMapping
-    public Response<PaymentCreateResponse> createPayment(@RequestBody PaymentCallbackRequest callbackRequest,
+    public Response<PaymentCreateResponse> createPayment(@RequestBody @Valid PaymentCallbackRequest callbackRequest,
                                                          @AuthenticationPrincipal UserDetailsImpl userDetails){
         return Response.success(paymentService.createPayment(callbackRequest, userDetails.getUser()));
     }
@@ -83,7 +94,7 @@ public class PaymentController {
      * @return
      */
     @PatchMapping("/{paymentId}")
-    public Response<?> cancelPayment(@RequestBody PaymentCancelRequest cancelRequest, @PathVariable UUID paymentId, @AuthenticationPrincipal UserDetailsImpl userDetails){
+    public Response<?> cancelPayment(@RequestBody @Valid PaymentCancelRequest cancelRequest, @PathVariable UUID paymentId, @AuthenticationPrincipal UserDetailsImpl userDetails){
         paymentService.cancelPayment(cancelRequest.getOrderId(), paymentId, userDetails.getUser());
         return Response.success("해당 결제가 취소되었습니다.");
     }

@@ -10,13 +10,16 @@ import com.sparta.aibusinessproject.domain.response.OrderFindResponse;
 import com.sparta.aibusinessproject.exception.Response;
 import com.sparta.aibusinessproject.security.UserDetailsImpl;
 import com.sparta.aibusinessproject.service.OrderService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.UUID;
 
 
@@ -24,6 +27,9 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/orders")
 public class OrderController {
+
+    private static final int[] ALLOWED_PAGE_SIZES = {10, 30, 50};
+    private static final int DEFAULT_PAGE_SIZE = 10;
 
     private final OrderService orderService;
 
@@ -38,12 +44,25 @@ public class OrderController {
         return Response.success(orderService.findOrder(orderId, userDetails.getUser()));
     }
 
+    /**
+     * 주문 전체 조회
+     * @param searchDto
+     * @param pageable
+     * @param userDetails
+     * @return
+     */
     @GetMapping
     public Response<Page<OrderFindResponse>> findOrders(OrderSearchRequest searchDto,
-                                                        @PageableDefault(size = 10) Pageable pageable,
+                                                        Pageable pageable,
                                                         @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        int size = DEFAULT_PAGE_SIZE; // 기본 10건
+        if(Arrays.stream(ALLOWED_PAGE_SIZES).anyMatch(s->s == pageable.getPageSize())){ //요청 사이즈가 10, 30, 50일 때
+            size = pageable.getPageSize();
+        }
 
-        return Response.success(orderService.findAllOrders(searchDto, pageable, userDetails.getUser()));
+        Pageable validatedPageable = PageRequest.of(pageable.getPageNumber(), size, pageable.getSort());
+
+        return Response.success(orderService.findAllOrders(searchDto, validatedPageable, userDetails.getUser()));
     }
 
     /**
@@ -53,7 +72,7 @@ public class OrderController {
      * @return
      */
     @PostMapping
-    public Response<OrderCreateResponse> createOrder(@RequestBody OrderCreateRequest requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public Response<OrderCreateResponse> createOrder(@RequestBody @Valid OrderCreateRequest requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return Response.success(orderService.createOrder(requestDto, userDetails.getUser()));
     }
 

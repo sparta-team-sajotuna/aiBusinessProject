@@ -64,20 +64,20 @@ public class PaymentService {
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new ApplicationException(ErrorCode.INVALID_ORDER));
 
-        // 2) 주문 중복 검증
+        // 2) 본인 주문만 결제 가능
+        if(!order.getUser().getUserId().equals(user.getUserId())
+                || !order.getStatus().equals(OrderStatusEnum.CREATED)){
+            throw new ApplicationException(ErrorCode.ACCESS_DENIED);
+        }
+
+        // 3) 주문 중복 검증
         if(paymentRepository.existsByOrderId(order.getId())){
             throw new ApplicationException(ErrorCode.PAYMENT_ALREADY_EXISTS);
         }
 
-        // 3) 실제 결제된 금액이랑 주문한 금액이랑 같은지 검증
+        // 4) 실제 결제된 금액이랑 주문한 금액이랑 같은지 검증
         if(callbackRequest.getPaidAmount() != order.getTotalPrice()){
             throw new ApplicationException(ErrorCode.WRONG_AMOUNT);
-        }
-
-        // 4) 본인 주문만 결제 가능
-        if(!order.getUser().getUserId().equals(user.getUserId())
-                || !order.getStatus().equals(OrderStatusEnum.CREATED)){
-            throw new ApplicationException(ErrorCode.ACCESS_DENIED);
         }
 
         // 주문테이블에 결제수단 저장
