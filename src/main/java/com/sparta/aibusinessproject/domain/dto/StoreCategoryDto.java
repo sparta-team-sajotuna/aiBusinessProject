@@ -4,6 +4,7 @@ import com.sparta.aibusinessproject.domain.Store;
 import com.sparta.aibusinessproject.domain.StoreCategory;
 import lombok.Builder;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,13 +15,14 @@ public record StoreCategoryDto(
         String phone,
         String content,
         int minDeliveryPrice,
-        String operationHours,
+        LocalTime openTime,
+        LocalTime closeTime,
         String closedDays,
         String deliveryAddress,
         List<StoreCategory> categories
 ) {
 
-        public StoreCategoryDto {
+    public StoreCategoryDto {
         // categories가 null일 경우 빈 ArrayList로 초기화
         if (categories == null) {
             categories = new ArrayList<>();
@@ -35,7 +37,8 @@ public record StoreCategoryDto(
                 .phone(dto.phone)
                 .content(dto.content)
                 .minDeliveryPrice(dto.minDeliveryPrice)
-                .operationHours(dto.operationHours)
+                .openTiME(dto.openTime)
+                .closeTiME(dto.closeTime)
                 .closedDays(dto.closedDays)
                 .deliveryAddress(dto.deliveryAddress)
                 .storeCategories(dto.categories)
@@ -51,7 +54,8 @@ public record StoreCategoryDto(
                 .phone(store.getPhone())
                 .content(store.getContent())
                 .minDeliveryPrice(store.getMinDeliveryPrice())
-                .operationHours(store.getOperationHours())
+                .openTime(store.getOpenTiME())
+                .closeTime(store.getCloseTiME())
                 .closedDays(store.getClosedDays())
                 .deliveryAddress(store.getDeliveryAddress())
                 .categories(store.getStoreCategories())

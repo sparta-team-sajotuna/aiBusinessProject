@@ -2,6 +2,8 @@ package com.sparta.aibusinessproject.domain.request;
 
 import com.sparta.aibusinessproject.domain.dto.StoreDto;
 
+import java.time.LocalTime;
+
 
 public record StoreCreateRequest(
         String name,
@@ -9,7 +11,8 @@ public record StoreCreateRequest(
         String phone,
         String content,
         int minDeliveryPrice,
-        String operationHours,
+        LocalTime openTime,
+        LocalTime closeTime,
         String closedDays,
         String deliveryAddress,
         String category
@@ -23,7 +26,8 @@ public record StoreCreateRequest(
                 .phone(request.phone())
                 .content(request.content())
                 .minDeliveryPrice(request.minDeliveryPrice())
-                .operationHours(request.operationHours())
+                .openTime(request.openTime())
+                .closeTime(request.closeTime())
                 .closedDays(request.closedDays())
                 .deliveryAddress(request.deliveryAddress())
                 .build();
