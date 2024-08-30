@@ -8,6 +8,7 @@ import com.sparta.aibusinessproject.domain.response.MenuUpdateResponse;
 import com.sparta.aibusinessproject.exception.Response;
 import com.sparta.aibusinessproject.security.UserDetailsImpl;
 import com.sparta.aibusinessproject.service.MenuService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -59,7 +60,7 @@ public class MenuController {
      */
     @PostMapping
     public Response<MenuCreateResponse> createMenu(@PathVariable UUID storeId,
-                                                   @RequestBody MenuCreateRequest requestDto,
+                                                   @RequestBody @Valid MenuCreateRequest requestDto,
                                                    @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return Response.success(menuService.createMenu(storeId, requestDto, userDetails.getUser()));
     }

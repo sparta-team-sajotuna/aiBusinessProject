@@ -10,6 +10,7 @@ import com.sparta.aibusinessproject.domain.response.PaymentSearchRequest;
 import com.sparta.aibusinessproject.exception.Response;
 import com.sparta.aibusinessproject.security.UserDetailsImpl;
 import com.sparta.aibusinessproject.service.PaymentService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -59,7 +60,7 @@ public class PaymentController {
      * @return
      */
     @PostMapping
-    public Response<PaymentCreateResponse> createPayment(@RequestBody PaymentCallbackRequest callbackRequest,
+    public Response<PaymentCreateResponse> createPayment(@RequestBody @Valid PaymentCallbackRequest callbackRequest,
                                                          @AuthenticationPrincipal UserDetailsImpl userDetails){
         return Response.success(paymentService.createPayment(callbackRequest, userDetails.getUser()));
     }
@@ -83,7 +84,7 @@ public class PaymentController {
      * @return
      */
     @PatchMapping("/{paymentId}")
-    public Response<?> cancelPayment(@RequestBody PaymentCancelRequest cancelRequest, @PathVariable UUID paymentId, @AuthenticationPrincipal UserDetailsImpl userDetails){
+    public Response<?> cancelPayment(@RequestBody @Valid PaymentCancelRequest cancelRequest, @PathVariable UUID paymentId, @AuthenticationPrincipal UserDetailsImpl userDetails){
         paymentService.cancelPayment(cancelRequest.getOrderId(), paymentId, userDetails.getUser());
         return Response.success("해당 결제가 취소되었습니다.");
     }
