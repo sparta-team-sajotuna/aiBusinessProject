@@ -1,9 +1,7 @@
 package com.sparta.aibusinessproject.domain;
 
-import com.sparta.aibusinessproject.domain.dto.StoreCategoryDto;
-import com.sparta.aibusinessproject.domain.dto.StoreDto;
+
 import com.sparta.aibusinessproject.domain.request.StoreUpdateRequest;
-import com.sparta.aibusinessproject.domain.response.CategoryListResponse;
 import com.sparta.aibusinessproject.domain.response.StoreSearchListResponse;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -13,6 +11,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
+import java.time.LocalTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -45,15 +44,20 @@ public class Store extends Timestamped {
     @Column(nullable = false)
     private int minDeliveryPrice;               // 최소 주문 금액
 
-    private String operationHours;      // 운영시간
+    private LocalTime openTiME;
+
+    private LocalTime closeTiME;
 
     private String closedDays;          // 휴무일
 
     private String deliveryAddress;     // 배달지역
 
-//    @OneToMany(mappedBy = "store", cascade = CascadeType.ALL, orphanRemoval = true)
     @OneToMany(mappedBy = "store" , cascade = CascadeType.ALL,orphanRemoval = true)
     private List<StoreCategory> storeCategories;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
     // TODO : Menu Entity 연동되면 List 연결
     // User user
@@ -72,7 +76,8 @@ public class Store extends Timestamped {
         this.phone = request.phone() != null ? request.phone() : this.phone;
         this.content = request.content() != null ? request.content() : this.content;
         this.minDeliveryPrice = request.minDeliveryPrice() != 0 ? request.minDeliveryPrice() : this.minDeliveryPrice;
-        this.operationHours = request.operationHousrs() != null ? request.operationHousrs() : this.operationHours;
+        this.openTiME = request.openTime() != null ? request.openTime() : this.openTiME;
+        this.closeTiME = request.closeTime() != null ? request.closeTime() : this.closeTiME;
         this.closedDays = request.closedDays() != null ? request.closedDays() : this.closedDays;
         this.deliveryAddress = request.deliveryAddress() != null ? request.deliveryAddress() : this.deliveryAddress;
     }

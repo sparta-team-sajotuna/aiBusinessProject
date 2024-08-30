@@ -1,17 +1,16 @@
 package com.sparta.aibusinessproject.controller;
 
-import com.sparta.aibusinessproject.domain.dto.StoreCategoryDto;
-import com.sparta.aibusinessproject.domain.dto.StoreDto;
 import com.sparta.aibusinessproject.domain.request.*;
 import com.sparta.aibusinessproject.domain.response.StoreSearchListResponse;
 import com.sparta.aibusinessproject.domain.response.StoreSearchResponse;
 import com.sparta.aibusinessproject.exception.Response;
+import com.sparta.aibusinessproject.security.UserDetailsImpl;
 import com.sparta.aibusinessproject.service.StoreService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
 
 import java.util.UUID;
 
@@ -24,10 +23,10 @@ public class StoreController {
 
     // 가게 생성
     @PostMapping
-    public Response<?> store(@RequestBody StoreCreateRequest request) {
-
-        return  Response.success(storeService.createOrder(request) +"가게의 정보가 생성되었습니다");
+    public Response<?> store(@RequestBody StoreCreateRequest request, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return  Response.success(storeService.createOrder(request,userDetails.getUser()) +"가게의 정보가 생성되었습니다");
     }
+
 
     // 가게 상세 조회
     @GetMapping("/{storeId}")
@@ -43,26 +42,31 @@ public class StoreController {
 
     // 가게 수정
     @PatchMapping("/{storeId}")
-    public Response<StoreDto> storeUpdate(@PathVariable UUID storeId , @RequestBody StoreUpdateRequest request){
+    public Response<StoreSearchResponse> storeUpdate(@PathVariable UUID storeId , @RequestBody StoreUpdateRequest request,  @AuthenticationPrincipal UserDetailsImpl userDetails){
 
-        return  Response.success(storeService.update(storeId,request));
+        return  Response.success(storeService.update(storeId,request,userDetails.getUser()));
     }
 
     // 가게 삭제
     @DeleteMapping("/{storeId}")
-    public Response<?> storeDelete(@PathVariable UUID storeId) {
-        storeService.delete(storeId);
-        return Response.success("가게 정보가 삭제되었습니다.");
+    public Response<?> storeDelete(@PathVariable UUID storeId,  @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        UUID  uuid = storeService.delete(storeId,userDetails.getUser());
+        return Response.success( uuid +"가게 정보가 삭제되었습니다.");
     }
 
 
     // 가게주인 카테고리 추가
     @PostMapping("/{storeId}/category")
-    public Response<?> createStoreCategory(@PathVariable UUID storeId, @RequestBody CategoryListCreateRequest request) {
+    public Response<StoreSearchResponse> createStoreCategory(@PathVariable UUID storeId, @RequestBody CategoryListCreateRequest request,  @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
 //        return Response.success(storeService.createStoreCategory(storeId,request));
-        storeService.createStoreCategory(storeId,request);
-        return Response.success("성공");
+        return Response.success(storeService.createStoreCategory(storeId,request,userDetails.getUser()));
+    }
+
+    // 가게주인 카테고리 삭제
+    @PostMapping("/{storeId}/categoryDelete")
+    public Response<?> deleteStoreCategory(@PathVariable UUID storeId, @RequestBody CategoryListCreateRequest request,  @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return Response.success(storeService.deleteStoreCategory(storeId,request,userDetails.getUser()));
     }
 
 }
