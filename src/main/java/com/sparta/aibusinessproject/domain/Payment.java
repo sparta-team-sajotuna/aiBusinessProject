@@ -47,4 +47,8 @@ public class Payment extends Timestamped {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn
     private User user;
+
+    public void cancelPayment(){
+        this.status = PaymentStatusEnum.CANCELED;
+    }
 }

@@ -1,9 +1,7 @@
 package com.sparta.aibusinessproject.service;
 
 import com.sparta.aibusinessproject.domain.*;
-import com.sparta.aibusinessproject.domain.request.MenuSearchRequest;
 import com.sparta.aibusinessproject.domain.request.PaymentCallbackRequest;
-import com.sparta.aibusinessproject.domain.response.MenuFindResponse;
 import com.sparta.aibusinessproject.domain.response.PaymentCreateResponse;
 import com.sparta.aibusinessproject.domain.response.PaymentFindResponse;
 import com.sparta.aibusinessproject.domain.response.PaymentSearchRequest;
@@ -11,8 +9,6 @@ import com.sparta.aibusinessproject.exception.ApplicationException;
 import com.sparta.aibusinessproject.exception.ErrorCode;
 import com.sparta.aibusinessproject.repository.OrderRepository;
 import com.sparta.aibusinessproject.repository.PaymentRepository;
-import com.sparta.aibusinessproject.repository.UserRepository;
-import com.sparta.aibusinessproject.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -59,10 +55,11 @@ public class PaymentService {
     }
 
     @Transactional
-    public PaymentCreateResponse createPayment(UUID orderId, PaymentCallbackRequest callbackRequest, User user) {
+    public PaymentCreateResponse createPayment(PaymentCallbackRequest callbackRequest, User user) {
         if(!user.getRole().equals(UserRoleEnum.CUSTOMER)){ //결제는 고객만
             throw new ApplicationException(ErrorCode.ACCESS_DENIED);
         }
+        UUID orderId = callbackRequest.getOrderId();
         // 1) order 조회
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new ApplicationException(ErrorCode.INVALID_ORDER));
@@ -77,7 +74,7 @@ public class PaymentService {
             throw new ApplicationException(ErrorCode.WRONG_AMOUNT);
         }
 
-        // 4) 본인이 주문만 결제 가능
+        // 4) 본인 주문만 결제 가능
         if(!order.getUser().getUserId().equals(user.getUserId())
                 || !order.getStatus().equals(OrderStatusEnum.CREATED)){
             throw new ApplicationException(ErrorCode.ACCESS_DENIED);
@@ -91,4 +88,43 @@ public class PaymentService {
         return PaymentCreateResponse.fromEntity(paymentRepository.save(payment));
     }
 
+    public void deletePayment(UUID paymentId, User user) {
+        // 롤체크 - 결제 삭제는 고객만
+        if(!user.getRole().equals(UserRoleEnum.CUSTOMER)){
+            throw new ApplicationException(ErrorCode.ACCESS_DENIED);
+        }
+
+        // 1) payment 조회
+        Payment payment = paymentRepository.findById(paymentId)
+                .orElseThrow(() -> new ApplicationException(ErrorCode.INVALID_PAYMENT));
+
+        // 본인 결제만 삭제 가능
+        if(!payment.getUser().getUserId().equals(user.getUserId())){
+            throw new ApplicationException(ErrorCode.ACCESS_DENIED);
+        }
+
+        paymentRepository.delete(payment);
+    }
+
+    public void cancelPayment(UUID orderId, UUID paymentId, User user) {
+        // 롤체크 - 결제 취소는 고객만
+        if(!user.getRole().equals(UserRoleEnum.CUSTOMER)){
+            throw new ApplicationException(ErrorCode.ACCESS_DENIED);
+        }
+
+        // 1) payment 조회
+        Payment payment = paymentRepository.findById(paymentId)
+                .orElseThrow(() -> new ApplicationException(ErrorCode.INVALID_PAYMENT));
+
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new ApplicationException(ErrorCode.INVALID_ORDER));
+
+        // 본인 결제만 취소 가능
+        if(!payment.getUser().getUserId().equals(user.getUserId()) || order.getStatus().equals(OrderStatusEnum.CANCELLED)){
+            throw new ApplicationException(ErrorCode.ACCESS_DENIED);
+        }
+
+        payment.cancelPayment();
+        paymentRepository.save(payment);
+    }
 }

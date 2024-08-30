@@ -107,6 +107,8 @@ public class OrderService {
             throw new ApplicationException(MIN_DELIVERY_PRICE);
         }
 
+        // PG사로 결제 요청
+
         //TODO
         // 배달 지역 검증 ..deliveryAddress
         // 운영시간 검증 openTime closeTime
@@ -136,6 +138,8 @@ public class OrderService {
         if(duration.toMinutes() > 5){
             throw new ApplicationException(ORDER_CANCELLATION_NOT_ALLOWED_TIME);
         }
+
+        // PG사로 취소요청
 
         order.cancelOrder();
 
