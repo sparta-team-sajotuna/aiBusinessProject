@@ -32,9 +32,6 @@ public enum ErrorCode {
     DEFAULT_VALUE(HttpStatus.BAD_REQUEST, "기본 카테고리 종류 이므로 변경이 불가능합니다."),
     ALREADY_CATEGORY(HttpStatus.ALREADY_REPORTED, "이미 존재하는 카테고리 입니다"),
 
-    DUPLICATED_USERID(HttpStatus.CONFLICT, "USER ID가 중복됩니다."),
-    INVALID(HttpStatus.BAD_REQUEST, "다시 시도해 주세요."),
-
 
     INVALID_ORDER(HttpStatus.NOT_FOUND, "유효하지 않은 주문입니다."),
     INVALID_MENU(HttpStatus.NOT_FOUND, "유효하지 않은 메뉴입니다."),
