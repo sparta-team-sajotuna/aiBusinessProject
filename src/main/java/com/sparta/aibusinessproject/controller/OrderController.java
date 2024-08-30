@@ -54,7 +54,7 @@ public class OrderController {
      */
     @PostMapping
     public Response<OrderCreateResponse> createOrder(@RequestBody OrderCreateRequest requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return Response.success(orderService.createStore(requestDto, userDetails.getUser()));
+        return Response.success(orderService.createOrder(requestDto, userDetails.getUser()));
     }
 
     /**

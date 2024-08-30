@@ -17,8 +17,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.DayOfWeek;
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.TextStyle;
+import java.util.Locale;
 import java.util.UUID;
 
 import static com.sparta.aibusinessproject.exception.ErrorCode.*;
@@ -61,7 +65,7 @@ public class OrderService {
     }
 
     @Transactional
-    public OrderCreateResponse createStore(OrderCreateRequest requestDto, User user) {
+    public OrderCreateResponse createOrder(OrderCreateRequest requestDto, User user) {
         // (1) 접근 권한 검증
         if(user.getRole().equals(UserRoleEnum.MANAGER) || user.getRole().equals(UserRoleEnum.MASTER)){
             throw new ApplicationException(ACCESS_DENIED);
@@ -70,6 +74,13 @@ public class OrderService {
         // (2) 가게 검증
         Store store = storeRepository.findById(requestDto.getStoreId())
                 .orElseThrow(() -> new ApplicationException(INVALID_STORE));
+
+        // 휴무일 검증
+        LocalDateTime date = LocalDateTime.now();
+        DayOfWeek dayOfWeek = date.getDayOfWeek();
+        if(store.getClosedDays().equals(dayOfWeek.getDisplayName(TextStyle.FULL, Locale.KOREAN))){
+            throw new ApplicationException(CLOSED_DAY_STORE);
+        }
 
         Order order = OrderCreateRequest.toEntity(requestDto, store, user);
 
@@ -97,8 +108,8 @@ public class OrderService {
         }
 
         //TODO
-        // 배달 지역 검증 ..
-        // 휴무일 검증 ..
+        // 배달 지역 검증 ..deliveryAddress
+        // 운영시간 검증 openTime closeTime
 
         return OrderCreateResponse.fromEntity(orderRepository.save(order));
     }

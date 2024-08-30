@@ -31,6 +31,8 @@ public enum ErrorCode {
     ORDER_CANCELLATION_NOT_ALLOWED_TIME(HttpStatus.BAD_REQUEST, "5분 이내에 취소가 가능합니다."),
     NOTFOUND_MENU(HttpStatus.NOT_FOUND, "해당 가게에 존재하지 않는 메뉴입니다."),
     MIN_DELIVERY_PRICE(HttpStatus.BAD_REQUEST, "최소 주문금액을 확인해주세요."),
+    WRONG_AMOUNT(HttpStatus.BAD_REQUEST, "금액이 일치하지 않습니다."),
+    CLOSED_DAY_STORE(HttpStatus.BAD_REQUEST, "오늘은 해당 가게의 휴무일입니다."),
 
     INVALID_USERID(HttpStatus.BAD_REQUEST, "아이디를 형식에 맞게 입력해 주세요."),
     INVALID_PASSWORD(HttpStatus.BAD_REQUEST, "비밀번호를 형식에 맞게 입력해 주세요."),

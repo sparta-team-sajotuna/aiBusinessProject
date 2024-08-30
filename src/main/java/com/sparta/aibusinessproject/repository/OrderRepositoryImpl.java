@@ -61,9 +61,9 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
     }
     private BooleanExpression userCheck(UserRoleEnum role, String userId) {
         if(role.equals(UserRoleEnum.CUSTOMER)){ // 고객 > 자신의 주문 내역만 조회 가능
-            return order.user.userId.eq(userId); // 가게 주인 >  자신의 가게 주문 내역 조회 가능
+            return order.user.userId.eq(userId);
         }
-//        else if(role.equals(UserRoleEnum.OWNER)){ TODO
+//        else if(role.equals(UserRoleEnum.OWNER)){ TODO// 가게 주인 >  자신의 가게 주문 내역 조회 가능
 //            return order.store.user.userId.eq(userId);
 //        }
         else{

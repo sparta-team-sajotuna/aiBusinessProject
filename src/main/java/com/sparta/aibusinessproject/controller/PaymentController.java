@@ -52,7 +52,7 @@ public class PaymentController {
     }
 
     /**
-     * 결제 내역 저장
+     * 결제 내역 저장 (결제 후 콜백)
      * @param callbackRequest
      * @param userDetails
      * @return

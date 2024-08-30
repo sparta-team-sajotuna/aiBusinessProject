@@ -68,4 +68,9 @@ public class Order extends Timestamped {
     public void modifyOrderStatus(OrderStatusEnum status){
         this.status = status;
     }
+
+    public void updatePaymentMethod(String paymentMethod){
+        this.paymentMethod = paymentMethod;
+        this.status = OrderStatusEnum.PAID;
+    }
 }
