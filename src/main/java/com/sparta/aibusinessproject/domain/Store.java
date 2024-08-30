@@ -52,6 +52,7 @@ public class Store extends Timestamped {
 
     private String deliveryAddress;     // 배달지역
 
+
     @OneToMany(mappedBy = "store" , cascade = CascadeType.ALL,orphanRemoval = true)
     private List<StoreCategory> storeCategories;
 
