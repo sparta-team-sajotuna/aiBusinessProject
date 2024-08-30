@@ -1,5 +1,6 @@
 package com.sparta.aibusinessproject.exception;
 
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -23,6 +24,7 @@ public class ExceptionManager {
         ErrorResponse errorResponse = new ErrorResponse(e.getErrorCode(), e.getErrorCode().getMessage());
         return new ResponseEntity<>(Response.error(errorResponse), HttpStatus.BAD_REQUEST);
     }
+
     // 회원가입 시 입력한 형식이 맞지 않을 때 발생하는 오류
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<?> methodArgumentNotValidExceptionHandler(MethodArgumentNotValidException e) {
@@ -34,7 +36,6 @@ public class ExceptionManager {
         return new ResponseEntity<>(Response.error(errorResponse), HttpStatus.BAD_REQUEST);
 
     }
-
 
     // 유효성 검사 시 어느 부분에서 예외가 발생했는지 확인하는 메서드
     private ErrorResponse handleBindingResultErrors(BindingResult bindingResult) {

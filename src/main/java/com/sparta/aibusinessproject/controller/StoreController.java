@@ -23,8 +23,10 @@ public class StoreController {
 
     // 가게 생성
     @PostMapping
+
     public Response<?> store(@RequestBody StoreCreateRequest request, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return  Response.success(storeService.createOrder(request,userDetails.getUser()) +"가게의 정보가 생성되었습니다");
+
     }
 
 

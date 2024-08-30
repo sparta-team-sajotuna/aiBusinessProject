@@ -1,25 +1,29 @@
 package com.sparta.aibusinessproject.domain;
 
 import com.sparta.aibusinessproject.domain.request.SignupRequest;
+import com.sparta.aibusinessproject.domain.request.UserModifyRequest;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name = "p_users")
-public class User {
+// Delete의 값이 null인 정보만 가져옴
+@Where(clause = "deleted_at is NULL")
+// Delete 쿼리문이 동작될때, 실제로는 Delete쿼리문이 가지않고 아래의 쿼리문이 동작함
+@SQLDelete(sql = "UPDATE p_users SET deleted_at = current_timestamp WHERE user_id = ?")
+public class User extends Timestamped {
 
     @Id
-    @Column(name="user_id" ,nullable = false)
+    @Column(name = "user_id", nullable = false)
     private String userId;
 
     @Column(name = "password", nullable = false)
@@ -40,17 +44,19 @@ public class User {
 
     @Builder.Default
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Address> address = new ArrayList<>();
+    private List<Address> addresses = new ArrayList<>();
 
-    // SignupRequestDto를 User 객체로 변환하는 메서드
-    public static User fromSignupRequestDto(SignupRequest signupRequestDto, UserRoleEnum role) {
-        return User.builder()
-                .userId(signupRequestDto.getUserId())
-                .password(signupRequestDto.getPassword()) // 비밀번호는 암호화 후 저장할 것
-                .name(signupRequestDto.getName())
-                .phone(signupRequestDto.getPhone())
-                .email(signupRequestDto.getEmail())
-                .role(role) // 기본 역할 설정 예시
-                .build();
+    // 회원 정보 수정 시 사용되는 메서드
+    public void update(UserModifyRequest request, String modifiedPassword) {
+        this.password = modifiedPassword != null ? modifiedPassword : this.password;
+        this.name = request.getName() != null ? request.getName() : this.name;
+        this.phone = request.getPhone() != null ? request.getPhone() : this.phone;
+        this.email = request.getEmail() != null ? request.getEmail() : this.email;
+    }
+
+    // 회원 주소 추가 시 사용되는 메서드
+    public void addAddress(Address address) {
+        addresses.add(address);
+        address.setUser(this);
     }
 }

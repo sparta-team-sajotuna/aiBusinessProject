@@ -11,7 +11,9 @@ import java.util.List;
 
 @Getter
 @NoArgsConstructor
+
 public class StoreSearchResponse {
+
 
     private String name;
     private String content;
