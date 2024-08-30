@@ -32,10 +32,6 @@ public enum ErrorCode {
     DEFAULT_VALUE(HttpStatus.BAD_REQUEST, "기본 카테고리 종류 이므로 변경이 불가능합니다."),
     ALREADY_CATEGORY(HttpStatus.ALREADY_REPORTED, "이미 존재하는 카테고리 입니다"),
 
-    DUPLICATED_USERID(HttpStatus.CONFLICT, "USER ID가 중복됩니다."),
-    INVALID(HttpStatus.BAD_REQUEST, "다시 시도해 주세요."),
-
-
     INVALID_ORDER(HttpStatus.NOT_FOUND, "유효하지 않은 주문입니다."),
     INVALID_MENU(HttpStatus.NOT_FOUND, "유효하지 않은 메뉴입니다."),
     INVALID_QUANTITY(HttpStatus.NOT_FOUND, "재고가 부족하여 주문이 불가능합니다. 수량을 확인해주세요"),
@@ -44,6 +40,9 @@ public enum ErrorCode {
     MIN_DELIVERY_PRICE(HttpStatus.BAD_REQUEST, "최소 주문금액을 확인해주세요."),
     WRONG_AMOUNT(HttpStatus.BAD_REQUEST, "금액이 일치하지 않습니다."),
     CLOSED_DAY_STORE(HttpStatus.BAD_REQUEST, "오늘은 해당 가게의 휴무일입니다."),
+    INVALID_ADDRESS(HttpStatus.BAD_REQUEST, "유효하지 않은 주소입니다."),
+    NOT_ALLOWED_DELIVERY_ADDRESS(HttpStatus.BAD_REQUEST, "해당 가게에서 배달을 지원하지 않는 지역입니다."),
+    NOT_OPERATION_TIME(HttpStatus.BAD_REQUEST, "해당 가게 운영시간이 아닙니다."),
 
     PAYMENT_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "이미 승인된 결제입니다."),
     INVALID_PAYMENT(HttpStatus.NOT_FOUND, "유효하지 않은 결제입니다."),
