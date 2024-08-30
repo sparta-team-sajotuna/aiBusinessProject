@@ -44,4 +44,8 @@ public class OrderMenu {
     public MenuInfoResponse toMenuInfo() {
         return MenuInfoResponse.fromOrderMenu(this);
     }
+
+    public int calculatePrice() {
+        return menu.getPrice() * quantity;
+    }
 }

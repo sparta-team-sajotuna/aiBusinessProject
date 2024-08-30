@@ -28,6 +28,7 @@ public class OrderCreateResponse {
     public static OrderCreateResponse fromEntity(Order order) {
         return OrderCreateResponse.builder()
                 .orderId(order.getId())
+                .storeName(order.getStoreName())
                 .totalPrice(order.getTotalPrice())
                 .status(order.getStatus())
                 .build();

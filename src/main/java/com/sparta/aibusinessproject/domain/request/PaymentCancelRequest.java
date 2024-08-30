@@ -5,12 +5,12 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Getter
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class MenuModifyRequest {
-    private String name;
-    private Integer quantity;
-    private Integer price;
+@AllArgsConstructor
+public class PaymentCancelRequest {
+    private UUID orderId;
 }

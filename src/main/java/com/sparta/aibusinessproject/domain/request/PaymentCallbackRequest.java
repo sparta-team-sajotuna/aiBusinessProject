@@ -16,6 +16,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PaymentCallbackRequest {
+    private UUID orderId;
     // 포트원 - pg사들을 모아서 한번에 결제서비스 제공해주는 솔루션
     //포트원 결제 callback 응답 정보 https://portone.gitbook.io/docs/sdk/javascript-sdk/payrt
     //포트원 주문번호 -> 결제창 요청 시 항상 고유 값으로 채번 되어야 함.
