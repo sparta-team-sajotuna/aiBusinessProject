@@ -3,6 +3,7 @@ package com.sparta.aibusinessproject.controller;
 import com.sparta.aibusinessproject.domain.User;
 import com.sparta.aibusinessproject.domain.UserRoleEnum;
 import com.sparta.aibusinessproject.domain.request.PaymentCallbackRequest;
+import com.sparta.aibusinessproject.domain.request.PaymentCancelRequest;
 import com.sparta.aibusinessproject.domain.response.PaymentCreateResponse;
 import com.sparta.aibusinessproject.domain.response.PaymentFindResponse;
 import com.sparta.aibusinessproject.domain.response.PaymentSearchRequest;
@@ -21,7 +22,7 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1")
+@RequestMapping("/api/v1/payments")
 public class PaymentController {
     private final PaymentService paymentService;
 
@@ -30,7 +31,7 @@ public class PaymentController {
      * @param paymentId
      * @return
      */
-    @GetMapping("/payments/{paymentId}")
+    @GetMapping("/{paymentId}")
     public Response<PaymentFindResponse> findPayment(@PathVariable UUID paymentId,
                                                      @AuthenticationPrincipal UserDetailsImpl userDetails){
         return Response.success(paymentService.findPayment(paymentId, userDetails.getUser()));
@@ -43,7 +44,7 @@ public class PaymentController {
      * @param userDetails
      * @return
      */
-    @GetMapping("/payments")
+    @GetMapping
     public Response<Page<PaymentFindResponse>> findOrders(PaymentSearchRequest searchDto,
                                                           @PageableDefault(size = 10) Pageable pageable,
                                                           @AuthenticationPrincipal UserDetailsImpl userDetails){
@@ -52,17 +53,39 @@ public class PaymentController {
     }
 
     /**
-     * 결제 내역 저장
+     * 결제 내역 저장 (결제 후 콜백)
      * @param callbackRequest
      * @param userDetails
      * @return
      */
-    @PostMapping("/orders/{orderId}/payments")
-    public Response<PaymentCreateResponse> createPayment(@PathVariable UUID orderId,
-                                                         @RequestBody PaymentCallbackRequest callbackRequest,
+    @PostMapping
+    public Response<PaymentCreateResponse> createPayment(@RequestBody PaymentCallbackRequest callbackRequest,
                                                          @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return Response.success(paymentService.createPayment(orderId, callbackRequest, userDetails.getUser()));
+        return Response.success(paymentService.createPayment(callbackRequest, userDetails.getUser()));
     }
 
+    /**
+     * 결제 내역 삭제
+     * @param paymentId
+     * @param userDetails
+     * @return
+     */
+    @DeleteMapping("/{paymentId}")
+    public Response<?> deletePayment(@PathVariable UUID paymentId, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        paymentService.deletePayment(paymentId, userDetails.getUser());
+        return Response.success("해당 결제 정보가 삭제되었습니다.");
+    }
+
+    /**
+     * 결제 취소
+     * @param paymentId
+     * @param userDetails
+     * @return
+     */
+    @PatchMapping("/{paymentId}")
+    public Response<?> cancelPayment(@RequestBody PaymentCancelRequest cancelRequest, @PathVariable UUID paymentId, @AuthenticationPrincipal UserDetailsImpl userDetails){
+        paymentService.cancelPayment(cancelRequest.getOrderId(), paymentId, userDetails.getUser());
+        return Response.success("해당 결제가 취소되었습니다.");
+    }
 
 }
