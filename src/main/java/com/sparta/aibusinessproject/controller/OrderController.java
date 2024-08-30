@@ -10,6 +10,7 @@ import com.sparta.aibusinessproject.domain.response.OrderFindResponse;
 import com.sparta.aibusinessproject.exception.Response;
 import com.sparta.aibusinessproject.security.UserDetailsImpl;
 import com.sparta.aibusinessproject.service.OrderService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -53,7 +54,7 @@ public class OrderController {
      * @return
      */
     @PostMapping
-    public Response<OrderCreateResponse> createOrder(@RequestBody OrderCreateRequest requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public Response<OrderCreateResponse> createOrder(@RequestBody @Valid OrderCreateRequest requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return Response.success(orderService.createOrder(requestDto, userDetails.getUser()));
     }
 

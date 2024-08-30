@@ -7,6 +7,7 @@ import com.sparta.aibusinessproject.domain.request.OrderSearchRequest;
 import com.sparta.aibusinessproject.domain.response.OrderCreateResponse;
 import com.sparta.aibusinessproject.domain.response.OrderFindResponse;
 import com.sparta.aibusinessproject.exception.ApplicationException;
+import com.sparta.aibusinessproject.repository.AddressRepository;
 import com.sparta.aibusinessproject.repository.MenuRepository;
 import com.sparta.aibusinessproject.repository.OrderRepository;
 import com.sparta.aibusinessproject.repository.StoreRepository;
@@ -17,10 +18,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.DayOfWeek;
-import java.time.Duration;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.*;
+import java.time.chrono.ChronoLocalDateTime;
 import java.time.format.TextStyle;
 import java.util.Locale;
 import java.util.UUID;
@@ -35,6 +34,7 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final MenuRepository menuRepository;
     private final StoreRepository storeRepository;
+    private final AddressRepository addressRepository;
     private final MenuService menuService;
 
     @Transactional(readOnly = true)
@@ -47,11 +47,11 @@ public class OrderService {
                 throw new ApplicationException(ACCESS_DENIED);
             }
         }
-//        else if(user.getRole().equals(UserRoleEnum.OWNER)){ // 가게주인 > 자신의 가게 주문 내역만 조회한다.TODO: store에 user 생성되면 주석풀기
-//            if(!order.getStore().getUser().getUserId().equals(user.getUserId())){
-//                throw new ApplicationException(ACCESS_DENIED);
-//            }
-//        }
+        else if(user.getRole().equals(UserRoleEnum.OWNER)){ // 가게주인 > 자신의 가게 주문 내역만 조회한다.
+            if(!order.getStore().getUser().getUserId().equals(user.getUserId())){
+                throw new ApplicationException(ACCESS_DENIED);
+            }
+        }
 
         return OrderFindResponse.fromEntity(order);
     }
@@ -60,7 +60,7 @@ public class OrderService {
     public Page<OrderFindResponse> findAllOrders(OrderSearchRequest searchDto, Pageable pageable, User user) {
         // 고객 > 자신의 주문 내역만 조회 가능
         // 가게 주인 >  자신의 가게 주문 내역 조회 가능
-        // 관리자 > 모두 조회 가능?
+        // 관리자 > 모두 조회 가능
         return orderRepository.searchOrders(searchDto, pageable,user.getRole(), user.getUserId());
     }
 
@@ -80,6 +80,19 @@ public class OrderService {
         DayOfWeek dayOfWeek = date.getDayOfWeek();
         if(store.getClosedDays().equals(dayOfWeek.getDisplayName(TextStyle.FULL, Locale.KOREAN))){
             throw new ApplicationException(CLOSED_DAY_STORE);
+        }
+
+        // 배달 지역 검증
+        Address address = addressRepository.findById(requestDto.getAddressId())
+                .orElseThrow(() -> new ApplicationException(INVALID_ADDRESS));
+
+        if(!store.getDeliveryAddress().contains(address.getTown())){
+            throw new ApplicationException(NOT_ALLOWED_DELIVERY_ADDRESS);
+        }
+
+        // 운영 시간 검증
+        if(!checkTime(store.getOpenTiME(), store.getCloseTiME(), date)){
+            throw new ApplicationException(NOT_OPERATION_TIME);
         }
 
         Order order = OrderCreateRequest.toEntity(requestDto, store, user);
@@ -108,10 +121,6 @@ public class OrderService {
         }
 
         // PG사로 결제 요청
-
-        //TODO
-        // 배달 지역 검증 ..deliveryAddress
-        // 운영시간 검증 openTime closeTime
 
         return OrderCreateResponse.fromEntity(orderRepository.save(order));
     }
@@ -148,17 +157,18 @@ public class OrderService {
 
     @Transactional
     public UUID modifyOrderStatus(UUID orderId, OrderStatusEnum status, User user) {
-        if(user.getRole().equals(UserRoleEnum.MANAGER) || user.getRole().equals(UserRoleEnum.MASTER)){
+        // 주문 상태 수정은 가게 주인만 한다.
+        if(!user.getRole().equals(UserRoleEnum.OWNER)){
             throw new ApplicationException(ACCESS_DENIED);
         }
 
         Order order = orderRepository.findById(orderId)
                 .orElseThrow(() -> new ApplicationException(INVALID_ORDER));
 
-        //유저 검증 => 주문 상태 수정은 가게 주인이 한다. TODO: store에 user 생성되면 주석풀기
-//        if(!order.getStore().getUser().getUserId().equals(user.getUserId())){
-//            throw new ApplicationException(ACCESS_DENIED);
-//        }
+        //유저 검증 => 주문 상태 수정은 가게 주인이 한다.
+        if(!order.getStore().getUser().getUserId().equals(user.getUserId())){
+            throw new ApplicationException(ACCESS_DENIED);
+        }
 
         order.modifyOrderStatus(status);
         return orderRepository.save(order).getId();
@@ -181,4 +191,20 @@ public class OrderService {
         orderRepository.delete(order);
     }
 
+    public static boolean checkTime(LocalTime startTime , LocalTime endTime, LocalDateTime now){
+        LocalDateTime startDateTime = now.with(startTime);
+        LocalDateTime endDateTime = now.with(endTime);
+
+        if (endTime.isBefore(startTime)) {
+            // 자정을 넘는 시간 범위 처리 (예: 22:00 ~ 03:30)
+            if (now.toLocalTime().isBefore(endTime)) {
+                startDateTime = startDateTime.minusDays(1);
+            }
+        }
+
+        log.info("now.isAfter(startDateTime) {}", now.isAfter(startDateTime));
+        log.info("now.isBefore(endDateTime) {}", now.isBefore(endDateTime));
+        return now.isAfter(startDateTime) && now.isBefore(endDateTime);
+
+    }
 }

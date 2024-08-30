@@ -61,6 +61,10 @@ public class MenuService {
         if(user.getRole().equals(UserRoleEnum.MASTER)){
             throw new ApplicationException(ACCESS_DENIED);
         }
+        // 가게 검증
+        storeRepository.findById(storeId)
+                .orElseThrow(() -> new ApplicationException(INVALID_STORE));
+
         return menuRepository.searchMenus(storeId, searchDto, pageable);
     }
 
@@ -74,10 +78,10 @@ public class MenuService {
             // 본인 가게 검증
             Store store = storeRepository.findById(storeId)
                     .orElseThrow(() -> new ApplicationException(INVALID_STORE));
-            //TODO
-//        if(!store.getUser().getId().equals(user.getUserId())){
-//            throw new ApplicationException(ACCESS_DENIED);
-//        }
+
+            if(!store.getUser().getUserId().equals(user.getUserId())){
+                throw new ApplicationException(ACCESS_DENIED);
+            }
         }
 
         Menu menu = MenuCreateRequest.toEntity(requestDto,
@@ -99,10 +103,10 @@ public class MenuService {
             // 본인 가게 검증
             Store store = storeRepository.findById(storeId)
                     .orElseThrow(() -> new ApplicationException(INVALID_STORE));
-            //TODO
-//        if(!store.getUser().getId().equals(user.getUserId())){
-//            throw new ApplicationException(ACCESS_DENIED);
-//        }
+
+            if(!store.getUser().getUserId().equals(user.getUserId())){
+                throw new ApplicationException(ACCESS_DENIED);
+            }
         }
 
         Menu menu = menuRepository.findById(menuId)
@@ -127,10 +131,10 @@ public class MenuService {
             // 본인 가게 검증
             Store store = storeRepository.findById(storeId)
                     .orElseThrow(() -> new ApplicationException(INVALID_STORE));
-            //TODO
-//        if(!store.getUser().getId().equals(user.getUserId())){
-//            throw new ApplicationException(ACCESS_DENIED);
-//        }
+
+            if(!store.getUser().getUserId().equals(user.getUserId())){
+                throw new ApplicationException(ACCESS_DENIED);
+            }
         }
 
         Menu menu = menuRepository.findById(menuId)
