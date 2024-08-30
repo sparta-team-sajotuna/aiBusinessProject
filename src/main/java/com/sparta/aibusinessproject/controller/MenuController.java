@@ -11,17 +11,22 @@ import com.sparta.aibusinessproject.service.MenuService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/stores/{storeId}/menus")
 public class MenuController {
+
+    private static final int[] ALLOWED_PAGE_SIZES = {10, 30, 50};
+    private static final int DEFAULT_PAGE_SIZE = 10;
 
     private final MenuService menuService;
 
@@ -47,9 +52,16 @@ public class MenuController {
     @GetMapping
     public Response<Page<MenuFindResponse>> findMenus(@PathVariable UUID storeId,
                                                       MenuSearchRequest searchDto,
-                                                      @PageableDefault(size = 10) Pageable pageable,
+                                                      Pageable pageable,
                                                       @AuthenticationPrincipal UserDetailsImpl userDetails){
-        return Response.success(menuService.findAllMenus(storeId, searchDto, pageable, userDetails.getUser()));
+        int size = DEFAULT_PAGE_SIZE; // 기본 10건
+        if(Arrays.stream(ALLOWED_PAGE_SIZES).anyMatch(s->s == pageable.getPageSize())){ //요청 사이즈가 10, 30, 50일 때
+            size = pageable.getPageSize();
+        }
+
+        Pageable validatedPageable = PageRequest.of(pageable.getPageNumber(), size, pageable.getSort());
+
+        return Response.success(menuService.findAllMenus(storeId, searchDto, validatedPageable, userDetails.getUser()));
     }
 
     /**
