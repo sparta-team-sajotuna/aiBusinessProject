@@ -2,41 +2,43 @@ package com.sparta.aibusinessproject.domain.response;
 
 import com.sparta.aibusinessproject.domain.Store;
 import com.sparta.aibusinessproject.domain.StoreCategory;
-import com.sparta.aibusinessproject.domain.dto.StoreDto;
-import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Builder
-public record StoreSearchResponse(
-        String name,
-        String content,
-        int minDeliveryPrice,
-        String operationHours,
-        String closedDays,
-        String deliveryAddress
-//        List<StoreCategory> categories
-//      List<MenuResponseDto> menu
-) {
-//    public StoreSearchResponse {
-//        // categories가 null일 경우 빈 ArrayList로 초기화
-//        if (categories == null) {
-//            categories = new ArrayList<>();
-//        }
-//    }
+@Getter
+@NoArgsConstructor
+
+public class StoreSearchResponse {
+
+
+    private String name;
+    private String content;
+    private int minDeliveryPrice;
+    private LocalTime openTime;
+    private LocalTime closeTime;
+    private String closedDays;
+    private String deliveryAddress;
+
+
+    private List<CategoryListResponse> categories = new ArrayList<>();
 
 
     // entity -> searchDto  새로 생성하는 경우
-    public static StoreSearchResponse from(Store store) {
-        return StoreSearchResponse.builder()
-                .name(store.getName())
-                .content(store.getContent())
-                .minDeliveryPrice(store.getMinDeliveryPrice())
-                .operationHours(store.getOperationHours())
-                .closedDays(store.getClosedDays())
-                .deliveryAddress(store.getDeliveryAddress())
-                .build();
+    public StoreSearchResponse(Store store) {
+        this.name = store.getName();
+        this.content = store.getContent();
+        this.minDeliveryPrice = store.getMinDeliveryPrice();
+        this.openTime = store.getOpenTiME();
+        this.closeTime = store.getCloseTiME();
+        this.closedDays = store.getClosedDays();
+        this.deliveryAddress = store.getDeliveryAddress();
+        for(StoreCategory storeCategory : store.getStoreCategories()){
+            categories.add(CategoryListResponse.from(storeCategory.getCategory()));
+        }
     }
 
 }
