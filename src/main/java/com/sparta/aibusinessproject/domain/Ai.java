@@ -1,5 +1,7 @@
 package com.sparta.aibusinessproject.domain;
 
+import com.sparta.aibusinessproject.ai.AiSearchListResponse;
+import com.sparta.aibusinessproject.domain.response.StoreSearchListResponse;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,7 +22,8 @@ import java.util.UUID;
 @Where(clause = "deleted_at is NULL")
 // Delete 쿼리문이 동작될때, 실제로는 Delete쿼리문이 가지않고 아래의 쿼리문이 동작함
 @SQLDelete(sql = "UPDATE p_ai SET deleted_at = current_timestamp WHERE id = ?")
-public class Ai {
+
+public class Ai extends Timestamped{
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
@@ -34,5 +37,11 @@ public class Ai {
 
     private String message;
 
-
+    public AiSearchListResponse toResponseDto() {
+        return new AiSearchListResponse(
+                user.getName(),
+                question,
+                message
+        );
+    }
 }
