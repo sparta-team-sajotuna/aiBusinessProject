@@ -15,7 +15,6 @@ import java.util.List;
 @AllArgsConstructor
 public class OrderSearchRequest {
     private OrderStatusEnum status;
-    private List<Long> orderItemIds;
     private String sortBy;
     private Pageable pageable;
 }

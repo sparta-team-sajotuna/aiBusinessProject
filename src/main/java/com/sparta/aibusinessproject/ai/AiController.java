@@ -17,6 +17,7 @@ public class AiController {
 
     private final AiService service;
 
+
     @PostMapping
     public Response<AiMessageResponse> getMessage(@RequestBody AiMessgeReqeust reqeust, @AuthenticationPrincipal UserDetailsImpl userDetails){
         return Response.success(new AiMessageResponse(service.getCompletion(reqeust.text(),userDetails.getUser())));

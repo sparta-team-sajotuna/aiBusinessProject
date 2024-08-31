@@ -20,6 +20,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static com.sparta.aibusinessproject.domain.QPayment.payment;
+import static com.sparta.aibusinessproject.domain.QUser.user;
 
 
 @RequiredArgsConstructor
@@ -33,10 +34,9 @@ public class PaymentRepositoryImpl implements PaymentRepositoryCustom {
 
         QueryResults<Payment> results = queryFactory
                 .selectFrom(payment)
+                .leftJoin(payment.user, user).fetchJoin()
                 .where(
                         priceBetween(searchDto.getMinPrice(), searchDto.getMaxPrice()),
-                        payment.deletedAt.isNull(),
-                        payment.user.userId.eq(userId),
                         userCheck(role, userId)
                 )
                 .orderBy(orders.toArray(new OrderSpecifier[0]))
@@ -53,7 +53,7 @@ public class PaymentRepositoryImpl implements PaymentRepositoryCustom {
     }
 
     private BooleanExpression userCheck(UserRoleEnum role, String userId) {
-        return role.equals(UserRoleEnum.CUSTOMER)? payment.createdBy.eq(userId): null; //CUSTOMER는 본인 결제 내역만 확인 가능
+        return role.equals(UserRoleEnum.CUSTOMER)? payment.user.userId.eq(userId): null; //CUSTOMER는 본인 결제 내역만 확인 가능
     }
 
     private BooleanExpression priceBetween(Double minPrice, Double maxPrice) {
@@ -80,9 +80,6 @@ public class PaymentRepositoryImpl implements PaymentRepositoryCustom {
                         break;
                     case "updatedAt":
                         orders.add(new OrderSpecifier<>(direction, payment.updatedAt));
-                        break;
-                    case "payAmount":
-                        orders.add(new OrderSpecifier<>(direction, payment.payAmount));
                         break;
                     default:
                         break;

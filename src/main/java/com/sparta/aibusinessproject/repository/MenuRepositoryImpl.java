@@ -19,6 +19,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static com.sparta.aibusinessproject.domain.QMenu.menu;
+import static com.sparta.aibusinessproject.domain.QStore.store;
 
 
 @RequiredArgsConstructor
@@ -32,10 +33,10 @@ public class MenuRepositoryImpl implements MenuRepositoryCustom {
 
         QueryResults<Menu> results = queryFactory
                 .selectFrom(menu)
+                .leftJoin(menu.store, store).fetchJoin() //store 조인
                 .where(
                         nameContains(searchDto.getName()),
                         priceBetween(searchDto.getMinPrice(), searchDto.getMaxPrice()),
-                        menu.deletedAt.isNull(),
                         menu.store.id.eq(storeId)
                 )
                 .orderBy(orders.toArray(new OrderSpecifier[0]))
@@ -55,10 +56,6 @@ public class MenuRepositoryImpl implements MenuRepositoryCustom {
         return name != null ? menu.name.containsIgnoreCase(name) : null;
     }
 
-//    private BooleanExpression descriptionContains(String description) {
-//        return description != null ? Menu.description.containsIgnoreCase(description) : null;
-//    }
-
     private BooleanExpression priceBetween(Double minPrice, Double maxPrice) {
         if (minPrice != null && maxPrice != null) {
             return menu.price.between(minPrice, maxPrice);
@@ -70,18 +67,6 @@ public class MenuRepositoryImpl implements MenuRepositoryCustom {
             return null;
         }
     }
-
-//    private BooleanExpression quantityBetween(Integer minQuantity, Integer maxQuantity) {
-//        if (minQuantity != null && maxQuantity != null) {
-//            return Menu.quantity.between(minQuantity, maxQuantity);
-//        } else if (minQuantity != null) {
-//            return Menu.quantity.goe(minQuantity);
-//        } else if (maxQuantity != null) {
-//            return Menu.quantity.loe(maxQuantity);
-//        } else {
-//            return null;
-//        }
-//    }
 
     private List<OrderSpecifier<?>> getAllOrderSpecifiers(Pageable pageable) {
         List<OrderSpecifier<?>> orders = new ArrayList<>();
@@ -96,12 +81,6 @@ public class MenuRepositoryImpl implements MenuRepositoryCustom {
                     case "updatedAt":
                         orders.add(new OrderSpecifier<>(direction, menu.updatedAt));
                         break;
-                    case "price":
-                        orders.add(new OrderSpecifier<>(direction, menu.price));
-                        break;
-//                    case "quantity":
-//                        orders.add(new OrderSpecifier<>(direction, menu.quantity));
-//                        break;
                     default:
                         break;
                 }
