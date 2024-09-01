@@ -102,7 +102,7 @@ dependencies {
 
 ## 인프라 아키텍처
 
-<img src="https://github.com/user-attachments/assets/cd25c195-a7f4-4891-bd32-847b2666116d" width="800" height="600" />
+<img src="https://github.com/user-attachments/assets/015adaef-2647-4b48-acbf-b16447bb5062" width="800" height="600" />
 
 <br>
 
