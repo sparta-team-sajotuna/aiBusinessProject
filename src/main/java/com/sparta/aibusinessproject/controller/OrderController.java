@@ -10,6 +10,8 @@ import com.sparta.aibusinessproject.domain.response.OrderFindResponse;
 import com.sparta.aibusinessproject.exception.Response;
 import com.sparta.aibusinessproject.security.UserDetailsImpl;
 import com.sparta.aibusinessproject.service.OrderService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -26,6 +28,7 @@ import java.util.UUID;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/orders")
+@Tag(name = "Order API", description = "주문 CRUD")
 public class OrderController {
 
     private static final int[] ALLOWED_PAGE_SIZES = {10, 30, 50};
@@ -40,6 +43,7 @@ public class OrderController {
      * @return
      */
     @GetMapping("/{orderId}")
+    @Operation(summary = "주문 단건 조회", description = "주문에 대한 상세 조회")
     public Response<OrderFindResponse> findOrder(@PathVariable UUID orderId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return Response.success(orderService.findOrder(orderId, userDetails.getUser()));
     }
@@ -52,6 +56,7 @@ public class OrderController {
      * @return
      */
     @GetMapping
+    @Operation(summary = "주문 전체 조회", description = "주문에 대한 전체 리스트 조회")
     public Response<Page<OrderFindResponse>> findOrders(OrderSearchRequest searchDto,
                                                         Pageable pageable,
                                                         @AuthenticationPrincipal UserDetailsImpl userDetails) {
@@ -72,6 +77,7 @@ public class OrderController {
      * @return
      */
     @PostMapping
+    @Operation(summary = "주문 생성", description = "User에 따른 주문 생성")
     public Response<OrderCreateResponse> createOrder(@RequestBody @Valid OrderCreateRequest requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return Response.success(orderService.createOrder(requestDto, userDetails.getUser()));
     }
@@ -83,6 +89,7 @@ public class OrderController {
      * @return
      */
     @PatchMapping("/{orderId}")
+    @Operation(summary = "주문 취소", description = "5분안에 주문 취소")
     public Response<UUID> cancelOrder(@PathVariable UUID orderId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return Response.success(orderService.cancelOrder(orderId, userDetails.getUser()));
     }
@@ -95,6 +102,7 @@ public class OrderController {
      * @return
      */
     @PatchMapping("/{orderId}/status")
+    @Operation(summary = "주문 상태 변경", description = "현재 주문 상태 변경(CREATED, PAID, SHIPPED, COMPLETED, CANCELLED)")
     public Response<UUID> modifyOrderStatus(@PathVariable UUID orderId, @RequestBody OrderModifyRequest requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return Response.success(orderService.modifyOrderStatus(orderId, requestDto.getStatus(), userDetails.getUser()));
     }
@@ -105,6 +113,7 @@ public class OrderController {
      * @return
      */
     @DeleteMapping("{orderId}")
+    @Operation(summary = "주문 삭제", description = "DB에 저장된 주문 삭제")
     public Response<?> deleteOrder(@PathVariable UUID orderId, @AuthenticationPrincipal UserDetailsImpl userDetails){
         orderService.deleteOrder(orderId, userDetails.getUser());
         return Response.success("주문 정보가 삭제되었습니다.");
