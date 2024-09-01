@@ -1,11 +1,9 @@
 package com.sparta.aibusinessproject.ai;
 
-import com.sparta.aibusinessproject.domain.Ai;
 import com.sparta.aibusinessproject.domain.User;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import com.sparta.aibusinessproject.domain.dto.AiDto;
+import com.sparta.aibusinessproject.repository.AiRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service

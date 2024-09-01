@@ -1,7 +1,6 @@
 package com.sparta.aibusinessproject.domain;
 
-import com.sparta.aibusinessproject.ai.AiSearchListResponse;
-import com.sparta.aibusinessproject.domain.response.StoreSearchListResponse;
+import com.sparta.aibusinessproject.domain.response.AiSearchListResponse;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

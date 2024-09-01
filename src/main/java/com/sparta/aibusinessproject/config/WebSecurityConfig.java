@@ -64,7 +64,7 @@ public class WebSecurityConfig {
         // 경로별 인가 작업
         http
                 .authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
-                        .requestMatchers("/api/v1/auth/**", "/signup", "/api/v1/stores/list","/api/v1/stores/{storeId}","/").permitAll() // '/api/v1/auth/'로 시작하는 요청 모두 접근 허가
+                        .requestMatchers("/api/v1/auth/**", "/signup", "/api/v1/stores/list","/api/v1/stores/{storeId}", "/","/swagger-ui/**", "/v3/api-docs/**","/").permitAll() // '/api/v1/auth/'로 시작하는 요청 모두 접근 허가
                         .anyRequest().authenticated() // 그 외 모든 요청 인증처리
                 );
 

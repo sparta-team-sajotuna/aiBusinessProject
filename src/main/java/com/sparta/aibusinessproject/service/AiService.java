@@ -1,14 +1,25 @@
-package com.sparta.aibusinessproject.ai;
+package com.sparta.aibusinessproject.service;
 
 
+import com.sparta.aibusinessproject.ai.*;
+import com.sparta.aibusinessproject.domain.Ai;
 import com.sparta.aibusinessproject.domain.User;
+import com.sparta.aibusinessproject.domain.dto.AiDto;
+import com.sparta.aibusinessproject.domain.request.AiSearchListRequest;
+import com.sparta.aibusinessproject.domain.response.AiSearchListResponse;
+import com.sparta.aibusinessproject.domain.response.AiSearchResponse;
+import com.sparta.aibusinessproject.exception.ApplicationException;
+import com.sparta.aibusinessproject.exception.ErrorCode;
+import com.sparta.aibusinessproject.repository.AiRepository;
 import com.sparta.aibusinessproject.security.UserDetailsImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.UUID;
 
 
 @Service
@@ -24,6 +35,7 @@ public class AiService {
         return geminiInterface.getCompletion(GEMINI_PRO, request);
     }
 
+    @Transactional
     public String getCompletion(String text, User user){
         GeminiRequest geminiRequest = new GeminiRequest(text+", 답변을 최대한 간결하게 50자 이하로 해줘");
         GeminiResponse response = getCompletion(geminiRequest);
@@ -67,4 +79,20 @@ public class AiService {
 
         return aiRepository.searchAi(pageableSize, pageable);
     }
+
+    @Transactional
+    public UUID delete(UUID aiId, User user) {
+
+        Ai ai = aiRepository.findById(aiId)
+                .orElseThrow(()-> new ApplicationException(ErrorCode.INVALID_AI));
+
+        if(!ai.getUser().getUserId().equals(user.getUserId())){
+            throw new ApplicationException(ErrorCode.ACCESS_DENIED);
+        }
+
+        aiRepository.delete(ai);
+        return aiId;
+    }
+
+
 }

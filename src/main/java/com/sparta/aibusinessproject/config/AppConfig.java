@@ -1,5 +1,6 @@
-package com.sparta.aibusinessproject.ai;
+package com.sparta.aibusinessproject.config;
 
+import com.sparta.aibusinessproject.ai.GeminiInterface;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

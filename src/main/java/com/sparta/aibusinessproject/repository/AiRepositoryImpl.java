@@ -1,8 +1,9 @@
-package com.sparta.aibusinessproject.ai;
+package com.sparta.aibusinessproject.repository;
 
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.sparta.aibusinessproject.domain.response.AiSearchListResponse;
 import com.sparta.aibusinessproject.domain.Ai;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
