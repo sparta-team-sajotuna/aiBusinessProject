@@ -1,4 +1,4 @@
-package com.sparta.aibusinessproject.ai;
+package com.sparta.aibusinessproject.domain.request;
 
 public record AiSearchListRequest(
         int pageSize

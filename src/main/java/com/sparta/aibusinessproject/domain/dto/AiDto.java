@@ -1,4 +1,4 @@
-package com.sparta.aibusinessproject.ai;
+package com.sparta.aibusinessproject.domain.dto;
 
 import com.sparta.aibusinessproject.domain.Ai;
 import com.sparta.aibusinessproject.domain.User;

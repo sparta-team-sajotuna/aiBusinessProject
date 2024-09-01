@@ -1,4 +1,4 @@
-package com.sparta.aibusinessproject.ai;
+package com.sparta.aibusinessproject.domain.response;
 
 public record AiSearchListResponse(
         String userName,
