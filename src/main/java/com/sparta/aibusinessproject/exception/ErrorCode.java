@@ -50,9 +50,11 @@ public enum ErrorCode {
     ORDER_AND_PAYMENT_MISMATCH(HttpStatus.BAD_REQUEST, "결제의 주문 ID가 요청된 주문 ID와 일치하지 않습니다."),
 
     ACCESS_DENIED(HttpStatus.FORBIDDEN, "접근 권한이 없습니다."),
-    INVALID_TOKEN(HttpStatus.NOT_FOUND, "유효하지 않은 토큰입니다.");
+    INVALID_TOKEN(HttpStatus.NOT_FOUND, "유효하지 않은 토큰입니다."),
 
-
+    INVALID_AI(HttpStatus.NOT_FOUND, "존재하지 않는 AI주소입니다.");
+    
+    
     private HttpStatus status;
     private String message;
 
