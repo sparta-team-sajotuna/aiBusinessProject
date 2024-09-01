@@ -31,7 +31,7 @@
 - **팀** **프로젝트** : 백엔드개발 팀의 일원으로 팀원과 협업을 통해 통합된 어플리케이션을 개발할 수 있다
 - **AI서비스** : 생성형 인공지능 서비스(API)와 연동하여 어플리케이션에 AI기능을 개발 할 수 있다
   
-  <img src="https://github.com/user-attachments/assets/6cef302e-4097-4f22-afca-80c400b8e1a4", width="300">
+  <img src="https://github.com/user-attachments/assets/ecf7c22d-6aff-4cc8-8c57-7670e0d556d6" width="500" height="300">
 
 <br>
 
