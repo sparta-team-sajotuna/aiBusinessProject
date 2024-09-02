@@ -1,8 +1,10 @@
 package com.sparta.aibusinessproject.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sparta.aibusinessproject.domain.RefreshToken;
 import com.sparta.aibusinessproject.domain.UserRoleEnum;
 import com.sparta.aibusinessproject.domain.request.LoginRequest;
+import com.sparta.aibusinessproject.repository.RefreshRepository;
 import com.sparta.aibusinessproject.security.UserDetailsImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -10,18 +12,23 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.io.IOException;
+import java.util.Date;
+
+import static com.sparta.aibusinessproject.jwt.JwtUtil.REFRESH_TOKEN_TIME;
 
 @Slf4j(topic = "로그인 및 JWT 생성")
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final JwtUtil jwtUtil;
+    private final RefreshRepository refreshRepository;
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
@@ -42,17 +49,32 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         }
     }
 
+    // Refresh Token 서버에 저장
+    private void saveRefreshToken(String userId, String refresh) {
+        Date date = new Date(System.currentTimeMillis() + REFRESH_TOKEN_TIME);
+        RefreshToken refreshToken = RefreshToken.builder()
+                .userId(userId)
+                .refresh(refresh)
+                .expiration(date.toString())
+                .build();
+
+        refreshRepository.save(refreshToken);
+    }
+
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         UserDetailsImpl userDetails = (UserDetailsImpl) authResult.getPrincipal();
         String userId = userDetails.getUsername();
-        UserRoleEnum role = userDetails.getUser().getRole();
+        String role = userDetails.getUser().getRole().getAuthority();
 
         String accessToken = jwtUtil.createAccessToken(userId, role);
-//        String refreshToken = jwtUtil.createRefreshToken(userId);
+        String refreshToken = jwtUtil.createRefreshToken(userId, role);
+        // refresh token 저장
+        saveRefreshToken(userId, refreshToken);
 
         response.addHeader(jwtUtil.AUTHORIZATION_HEADER, accessToken);
-//        response.addCookie(jwtUtil.addRefreshTokenToCookie(refreshToken));
+        response.addCookie(jwtUtil.addRefreshTokenToCookie(refreshToken));
+        response.setStatus(HttpStatus.OK.value());
     }
 
     @Override

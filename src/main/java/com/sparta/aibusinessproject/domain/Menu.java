@@ -1,6 +1,5 @@
 package com.sparta.aibusinessproject.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sparta.aibusinessproject.domain.request.MenuModifyRequest;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
@@ -42,6 +41,7 @@ public class Menu extends Timestamped {
     @JoinColumn(name = "store_id")
     private Store store;
 
+    @Builder.Default
     @OneToMany(mappedBy = "menu", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderMenu> orderMenuList = new ArrayList<>();
 

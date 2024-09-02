@@ -2,8 +2,11 @@ package com.sparta.aibusinessproject.config;
 
 import com.sparta.aibusinessproject.jwt.JwtAuthenticationFilter;
 import com.sparta.aibusinessproject.jwt.JwtAuthorizationFilter;
+import com.sparta.aibusinessproject.jwt.JwtLogoutFilter;
 import com.sparta.aibusinessproject.jwt.JwtUtil;
+import com.sparta.aibusinessproject.repository.RefreshRepository;
 import com.sparta.aibusinessproject.security.UserDetailsServiceImpl;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,7 +21,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+
+import java.util.Collections;
 
 @Configuration
 @EnableWebSecurity(debug = false)
@@ -29,6 +37,7 @@ public class WebSecurityConfig {
     private final JwtUtil jwtUtil;
     private final UserDetailsServiceImpl userDetailsService;
     private final AuthenticationConfiguration authenticationConfiguration;
+    private final RefreshRepository refreshRepository;
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
@@ -38,7 +47,7 @@ public class WebSecurityConfig {
 
     @Bean
     public JwtAuthenticationFilter jwtAuthenticationFilter() throws Exception {
-        JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtUtil);
+        JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtUtil, refreshRepository);
         filter.setAuthenticationManager(authenticationManager(authenticationConfiguration));
         filter.setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/api/v1/auth/login", "POST"));
         return filter;
@@ -50,12 +59,18 @@ public class WebSecurityConfig {
     }
 
     @Bean
+    public JwtLogoutFilter jwtLogoutFilter() {
+        return new JwtLogoutFilter(jwtUtil, refreshRepository);
+    }
+
+    @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
         // CSRF 설정 및 시큐리티 기본 설정 비활성화
         http.csrf(AbstractHttpConfigurer::disable);
         http.formLogin(AbstractHttpConfigurer::disable);
@@ -71,6 +86,7 @@ public class WebSecurityConfig {
         // 필터 추가
         http.addFilterBefore(jwtAuthorizationFilter(), JwtAuthenticationFilter.class);
         http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(jwtLogoutFilter(), LogoutFilter.class);
 
         // 기본 설정인 Session 방식은 사용하지 않고 JWT 방식을 사용하기 위한 설정
         // 세션을 stateless상태로 관리!

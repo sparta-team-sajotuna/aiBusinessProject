@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.web.bind.annotation.BindParam;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
@@ -46,7 +47,7 @@ public class Order extends Timestamped {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn
     private Store store;
-
+  
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderMenu> orderMenuList = new ArrayList<>();
 

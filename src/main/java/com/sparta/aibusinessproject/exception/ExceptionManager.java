@@ -1,5 +1,6 @@
 package com.sparta.aibusinessproject.exception;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,12 +10,13 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-
+@Slf4j(topic = "Rest Controller Advice")
 @RestControllerAdvice
 public class ExceptionManager {
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<?> runtimeExceptionHandler(RuntimeException e) {
+        log.error(e.getMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(Response.error(e.getMessage()));
     }
@@ -22,12 +24,14 @@ public class ExceptionManager {
     @ExceptionHandler(NotValidException.class)
     public ResponseEntity<?> notValidExceptionHandler(NotValidException e) {
         ErrorResponse errorResponse = new ErrorResponse(e.getErrorCode(), e.getErrorCode().getMessage());
+        log.error(e.getMessage());
         return new ResponseEntity<>(Response.error(errorResponse), HttpStatus.BAD_REQUEST);
     }
 
     // 회원가입 시 입력한 형식이 맞지 않을 때 발생하는 오류
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<?> methodArgumentNotValidExceptionHandler(MethodArgumentNotValidException e) {
+        log.error(e.getMessage());
         // Validation 오류를 수집
         BindingResult bindingResult = e.getBindingResult();
         // 오류 처리
