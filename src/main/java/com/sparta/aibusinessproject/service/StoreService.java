@@ -3,6 +3,7 @@ package com.sparta.aibusinessproject.service;
 import com.sparta.aibusinessproject.domain.*;
 import com.sparta.aibusinessproject.domain.dto.StoreDto;
 import com.sparta.aibusinessproject.domain.request.*;
+import com.sparta.aibusinessproject.domain.response.StoreCreateResponse;
 import com.sparta.aibusinessproject.domain.response.StoreSearchListResponse;
 import com.sparta.aibusinessproject.domain.response.StoreSearchResponse;
 import com.sparta.aibusinessproject.exception.ApplicationException;
@@ -36,7 +37,7 @@ public class StoreService {
 
     // 가게 추가
     @Transactional
-    public String createOrder(StoreCreateRequest requestDto, User user) {
+    public StoreCreateResponse createOrder(StoreCreateRequest requestDto, User user) {
 
         // 유저 권한일때는 접근 권한 없음
         if(user.getRole() == UserRoleEnum.CUSTOMER){
@@ -55,7 +56,9 @@ public class StoreService {
 
         Store storeEntity = storeRepository.save(StoreDto.toEntity(dto,user,requestDto.content()));
 
-        return storeEntity.getName();
+
+
+        return StoreCreateResponse.fromEntity(storeEntity);
     }
 
     // 가게 AI를 활용한 추가

@@ -1,6 +1,7 @@
 package com.sparta.aibusinessproject.controller;
 
 import com.sparta.aibusinessproject.domain.request.*;
+import com.sparta.aibusinessproject.domain.response.StoreCreateResponse;
 import com.sparta.aibusinessproject.domain.response.StoreSearchListResponse;
 import com.sparta.aibusinessproject.domain.response.StoreSearchResponse;
 import com.sparta.aibusinessproject.exception.Response;
@@ -33,8 +34,9 @@ public class StoreController {
     // 가게 생성
     @PostMapping
     @Operation(summary = "가게 생성", description = "유저에 대한 가게 생성(가게 세부내용 작성)", security = @SecurityRequirement(name = "bearerAuth"))
-    public Response<?> store(@RequestBody StoreCreateRequest request, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return  Response.success(storeService.createOrder(request,userDetails.getUser()) +"가게의 정보가 생성되었습니다");
+    public Response<StoreCreateResponse> store(@RequestBody StoreCreateRequest request, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+
+        return  Response.success(storeService.createOrder(request,userDetails.getUser()));
 
     }
 

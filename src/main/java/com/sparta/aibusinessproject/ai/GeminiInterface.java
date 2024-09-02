@@ -14,3 +14,5 @@ public interface GeminiInterface {
             @RequestBody GeminiRequest request
     );
 }
+
+

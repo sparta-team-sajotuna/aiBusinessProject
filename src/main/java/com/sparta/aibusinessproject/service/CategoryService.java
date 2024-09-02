@@ -27,13 +27,16 @@ public class CategoryService {
     // 카테고리 추가
     @Transactional
     public Category addCategory(CategoryCreateRequest request) {
-        // TODO : UserName도 같이 찾는 코드 변경
         // DB에 해당 기존 카테고리 리스트 찾기
         if(categoryRepository.existsByName(request.name())){
             throw new ApplicationException(ErrorCode.DUPLICATED_CATEGORY);
         }
-        return categoryRepository.save(Category.builder().name(request.name()).build());
-    }
+
+        Category category = categoryRepository.save(Category.builder().name(request.name()).build());
+
+
+        return category;
+}
     
     // 카테고리 전부 출력
     public Page<CategoryListResponse> getCategories(Pageable pageable) {

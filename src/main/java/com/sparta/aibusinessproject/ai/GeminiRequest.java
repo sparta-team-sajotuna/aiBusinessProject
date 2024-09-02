@@ -13,8 +13,28 @@ import java.util.List;
 @Getter
 public class GeminiRequest {
 
-    private List<Content> contents;
+    private List<Content> contents;     // 객체의 요청의 내용 담을 공간
 
+    /* Json 형식을 맞추기 위해 생성자에게 구조 맞춰줌
+        Request Body
+        {
+            "contents": [
+                {
+                    "parts":
+                        {
+                            "text": "치킨집 소개글 작성해줘"
+                        }
+
+                }
+             ],
+            "generationConfig": {
+                "candidate_count":1,
+                "max_output_tokens":1000,
+                "temperature": 0.7
+            }
+        }
+
+     */
     public GeminiRequest(String text) {
         Part part = new TextPart(text);
         Content content = new Content(Collections.singletonList(part));
@@ -36,11 +56,11 @@ public class GeminiRequest {
         public String text;
     }
 
-    @Getter
-    @AllArgsConstructor
-    public static class InlineData{
-        private String mimeType;
-        private String data;
-    }
+//    @Getter
+//    @AllArgsConstructor
+//    public static class InlineData{
+//        private String mimeType;
+//        private String data;
+//    }
 }
 
