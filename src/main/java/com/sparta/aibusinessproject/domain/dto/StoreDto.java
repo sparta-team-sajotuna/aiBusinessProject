@@ -22,12 +22,12 @@ public record StoreDto(
 
 
     // dto -> entity
-    public static Store toEntity(StoreDto dto,User user) {
+    public static Store toEntity(StoreDto dto,User user,String text) {
         return Store.builder()
                 .name(dto.name)
                 .address(dto.address)
                 .phone(dto.phone)
-                .content(dto.content)
+                .content(text)
                 .minDeliveryPrice(dto.minDeliveryPrice)
                 .openTiME(dto.openTime)
                 .closeTiME(dto.closeTime)
@@ -38,20 +38,5 @@ public record StoreDto(
                 .build();
     }
 
-    // entity -> dto
-    // category 생성 후
-//    public static StoreDto from(Store store) {
-//        return StoreDto.builder()
-//                .name(store.getName())
-//                .address(store.getAddress())
-//                .phone(store.getPhone())
-//                .content(store.getContent())
-//                .minDeliveryPrice(store.getMinDeliveryPrice())
-//                .openTime(store.getOpenTiME())
-//                .closeTime(store.getCloseTiME())
-//                .closedDays(store.getClosedDays())
-//                .deliveryAddress(store.getDeliveryAddress())
-//                .build();
-//    }
 
 }

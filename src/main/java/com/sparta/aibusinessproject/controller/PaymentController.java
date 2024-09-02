@@ -9,6 +9,7 @@ import com.sparta.aibusinessproject.exception.Response;
 import com.sparta.aibusinessproject.security.UserDetailsImpl;
 import com.sparta.aibusinessproject.service.PaymentService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -39,7 +40,7 @@ public class PaymentController {
      * @return
      */
     @GetMapping("/{paymentId}")
-    @Operation(summary = "결제 단건 조회", description = "유저에 대한 결제 상세 조회")
+    @Operation(summary = "결제 단건 조회", description = "유저에 대한 결제 상세 조회", security = @SecurityRequirement(name = "bearerAuth"))
     public Response<PaymentFindResponse> findPayment(@PathVariable UUID paymentId,
                                                      @AuthenticationPrincipal UserDetailsImpl userDetails){
         return Response.success(paymentService.findPayment(paymentId, userDetails.getUser()));
@@ -53,7 +54,7 @@ public class PaymentController {
      * @return
      */
     @GetMapping
-    @Operation(summary = "결제 전체 조회", description = "유저에 대한 결제 전체 리스트 조회")
+    @Operation(summary = "결제 전체 조회", description = "유저에 대한 결제 전체 리스트 조회", security = @SecurityRequirement(name = "bearerAuth"))
     public Response<Page<PaymentFindResponse>> findOrders(PaymentSearchRequest searchDto,
                                                           Pageable pageable,
                                                           @AuthenticationPrincipal UserDetailsImpl userDetails){
@@ -75,7 +76,7 @@ public class PaymentController {
      * @return
      */
     @PostMapping
-    @Operation(summary = "결제 내역 저장", description = "결제 후 해당 결제 내역 저장")
+    @Operation(summary = "결제 내역 저장", description = "결제 후 해당 결제 내역 저장", security = @SecurityRequirement(name = "bearerAuth"))
     public Response<PaymentCreateResponse> createPayment(@RequestBody @Valid PaymentCallbackRequest callbackRequest,
                                                          @AuthenticationPrincipal UserDetailsImpl userDetails){
         return Response.success(paymentService.createPayment(callbackRequest, userDetails.getUser()));
@@ -88,7 +89,7 @@ public class PaymentController {
      * @return
      */
     @DeleteMapping("/{paymentId}")
-    @Operation(summary = "결제 내역 삭제", description = "유저에 대한 결제 내역 삭제")
+    @Operation(summary = "결제 내역 삭제", description = "유저에 대한 결제 내역 삭제", security = @SecurityRequirement(name = "bearerAuth"))
     public Response<?> deletePayment(@PathVariable UUID paymentId, @AuthenticationPrincipal UserDetailsImpl userDetails){
         paymentService.deletePayment(paymentId, userDetails.getUser());
         return Response.success("해당 결제 정보가 삭제되었습니다.");
@@ -101,7 +102,7 @@ public class PaymentController {
      * @return
      */
     @PatchMapping("/{paymentId}")
-    @Operation(summary = "결제 취소", description = "결제 후 해당 결제에 대해 취소")
+    @Operation(summary = "결제 취소", description = "결제 후 해당 결제에 대해 취소", security = @SecurityRequirement(name = "bearerAuth"))
     public Response<?> cancelPayment(@RequestBody @Valid PaymentCancelRequest cancelRequest, @PathVariable UUID paymentId, @AuthenticationPrincipal UserDetailsImpl userDetails){
         paymentService.cancelPayment(cancelRequest.getOrderId(), paymentId, userDetails.getUser());
         return Response.success("해당 결제가 취소되었습니다.");

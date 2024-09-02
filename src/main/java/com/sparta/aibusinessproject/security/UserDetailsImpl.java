@@ -2,6 +2,7 @@ package com.sparta.aibusinessproject.security;
 
 import com.sparta.aibusinessproject.domain.User;
 import com.sparta.aibusinessproject.domain.UserRoleEnum;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -14,6 +15,7 @@ import java.util.Collections;
 * Spring Security는 UserDetails를 사용하여 사용자 정보를 제공하고, 사용자의 권한을 관리 함
 *
  */
+@Getter
 @RequiredArgsConstructor
 public class UserDetailsImpl implements UserDetails {
 

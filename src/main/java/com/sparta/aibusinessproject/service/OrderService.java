@@ -144,7 +144,7 @@ public class OrderService {
         LocalDateTime createdAt = order.getCreatedAt();
         LocalDateTime now = LocalDateTime.now();
         Duration duration = Duration.between(createdAt, now);
-        if(duration.toMinutes() > 5){
+        if (duration.toMinutes() > 5) {
             throw new ApplicationException(ORDER_CANCELLATION_NOT_ALLOWED_TIME);
         }
 
@@ -153,6 +153,7 @@ public class OrderService {
         order.cancelOrder();
 
         return orderRepository.save(order).getId();
+//    }
     }
 
     @Transactional

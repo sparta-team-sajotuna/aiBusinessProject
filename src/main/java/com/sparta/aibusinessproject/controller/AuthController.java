@@ -5,6 +5,8 @@ import com.sparta.aibusinessproject.exception.Response;
 import com.sparta.aibusinessproject.service.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,9 +32,10 @@ public class AuthController {
         return Response.success("회원가입이 완료되었습니다. 로그인 후 다양한 서비스를 이용해 보세요.");
     }
 
-    @PostMapping("/logout")
-    @Operation(summary = "로그아웃", description = "블랙 리스트를 통한 로그아웃")
-    public void logout() {
-
+    @PostMapping("/reissue")
+    @Operation(summary = "ReIssue", description = "Access토큰 재발급")
+    public Response<?> reIssue(HttpServletRequest request, HttpServletResponse response) {
+        authService.reIssue(request, response);
+        return Response.success("Access Token 재발급 완료");
     }
 }

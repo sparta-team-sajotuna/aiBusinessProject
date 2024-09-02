@@ -2,9 +2,13 @@ package com.sparta.aibusinessproject.repository;
 
 import com.querydsl.core.QueryResults;
 import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.sparta.aibusinessproject.domain.response.AiSearchListResponse;
-import com.sparta.aibusinessproject.domain.Ai;
+import com.sparta.aibusinessproject.domain.Category;
+import com.sparta.aibusinessproject.domain.Store;
+import com.sparta.aibusinessproject.domain.request.StoreSearchListRequest;
+import com.sparta.aibusinessproject.domain.response.CategoryListResponse;
+import com.sparta.aibusinessproject.domain.response.StoreSearchListResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -13,25 +17,27 @@ import org.springframework.data.domain.Sort;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
-
-import static com.sparta.aibusinessproject.domain.QAi.ai;
+import static com.sparta.aibusinessproject.domain.QCategory.category;
+import static com.sparta.aibusinessproject.domain.QStore.store;
+import static com.sparta.aibusinessproject.domain.QStoreCategory.storeCategory;
 
 
 @RequiredArgsConstructor
-public class AiRepositoryImpl implements AiRepositoryCustom {
+public class CategoryRepositoryImpl implements  CategoryRepositoryCustom{
 
     private final JPAQueryFactory queryFactory;
 
 
     @Override
-    public Page<AiSearchListResponse> searchAi(Pageable pageable) {
+    public Page<CategoryListResponse> searchCategories(Pageable pageable) {
         // 정렬 기준 설정
         List<OrderSpecifier<?>> orders = getAllOrderSpecifiers(pageable);
 
-        QueryResults<Ai> results = queryFactory
-                .selectFrom(ai)
+        QueryResults<Category> results = queryFactory
+                .selectFrom(category)
                 // 정렬
                 .orderBy(orders.toArray(new OrderSpecifier[0]))
                 // 페이징 처리
@@ -40,15 +46,15 @@ public class AiRepositoryImpl implements AiRepositoryCustom {
                 // 결과값 반환
                 .fetchResults();
 
-        List<AiSearchListResponse> content = results.getResults().stream()
-                .map(Ai::toResponseDto)
+        List<CategoryListResponse> content = results.getResults().stream()
+                .map(c -> CategoryListResponse.from(c))
                 .collect(Collectors.toList());
+
         long total = results.getTotal();
 
         // PageImpl 객체를 생성하여 결과를 반환합니다. 이 객체는 페이지 내용, 페이지 정보, 총 결과 수를 포함
         return new PageImpl<>(content, pageable, total);
     }
-
 
 
     private List<OrderSpecifier<?>> getAllOrderSpecifiers(Pageable pageable) {
@@ -62,10 +68,10 @@ public class AiRepositoryImpl implements AiRepositoryCustom {
                 com.querydsl.core.types.Order direction = sortOrder.isAscending() ? com.querydsl.core.types.Order.ASC : com.querydsl.core.types.Order.DESC;
                 switch (sortOrder.getProperty()) {
                     case "createdAt":
-                        orders.add(new OrderSpecifier<>(direction, ai.createdAt));
+                        orders.add(new OrderSpecifier<>(direction, category.createdAt));
                         break;
                     case "modifiedAt":
-                        orders.add(new OrderSpecifier<>(direction, ai.updatedAt));
+                        orders.add(new OrderSpecifier<>(direction, store.updatedAt));
                         break;
                     default:
                         break;

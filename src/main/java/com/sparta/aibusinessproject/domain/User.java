@@ -1,9 +1,11 @@
 package com.sparta.aibusinessproject.domain;
 
-import com.sparta.aibusinessproject.domain.request.SignupRequest;
 import com.sparta.aibusinessproject.domain.request.UserModifyRequest;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
@@ -12,9 +14,9 @@ import java.util.List;
 
 @Getter
 @Builder
+@Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
 @Table(name = "p_users")
 // Delete의 값이 null인 정보만 가져옴
 @Where(clause = "deleted_at is NULL")
@@ -59,4 +61,16 @@ public class User extends Timestamped {
         addresses.add(address);
         address.setUser(this);
     }
+
+    @PrePersist
+    public void prePersist() {
+        super.updateCreated(this);
+        super.updateModified(this);
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        super.updateModified(this);
+    }
+
 }
