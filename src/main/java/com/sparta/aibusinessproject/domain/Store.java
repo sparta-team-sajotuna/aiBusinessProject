@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalTime;
 import java.util.List;
@@ -19,12 +20,11 @@ import java.util.UUID;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@EntityListeners(value = {AuditingEntityListener.class})
 @Table(name = "p_store")
 @Builder
 // Delete의 값이 null인 정보만 가져옴
 @Where(clause = "deleted_at is NULL")
-// Delete 쿼리문이 동작될때, 실제로는 Delete쿼리문이 가지않고 아래의 쿼리문이 동작함
-@SQLDelete(sql = "UPDATE p_store SET deleted_at = current_timestamp WHERE id = ?")
 public class Store extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -60,8 +60,8 @@ public class Store extends Timestamped {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    // TODO : Menu Entity 연동되면 List 연결
-    // User user
+    @OneToMany(mappedBy = "store" , cascade = CascadeType.ALL,orphanRemoval = true)
+    private List<Menu> menu;
 
     // DTO로 변환하는 메서드
     public StoreSearchListResponse toResponseDto() {
