@@ -18,8 +18,8 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderFindResponse {
-    //TODO
-    //private Store store;
+
+    private String storeName;
 
     private UUID orderId;
     private String paymentMethod;
@@ -35,6 +35,7 @@ public class OrderFindResponse {
 
     public static OrderFindResponse fromEntity(Order order) {
         return OrderFindResponse.builder()
+                .storeName(order.getStoreName())
                 .orderId(order.getId())
                 .paymentMethod(order.getPaymentMethod())
                 .totalPrice(order.getTotalPrice())

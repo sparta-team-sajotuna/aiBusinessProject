@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static com.sparta.aibusinessproject.domain.QCategory.category;
 import static com.sparta.aibusinessproject.domain.QStore.store;
 import static com.sparta.aibusinessproject.domain.QStoreCategory.storeCategory;
 
@@ -102,8 +101,8 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom{
                     case "createdAt":
                         orders.add(new OrderSpecifier<>(direction, store.createdAt));
                         break;
-                    case "price":
-                        orders.add(new OrderSpecifier<>(direction, store.minDeliveryPrice));
+                    case "updatedAt":
+                        orders.add(new OrderSpecifier<>(direction, store.updatedAt));
                         break;
                     default:
                         break;

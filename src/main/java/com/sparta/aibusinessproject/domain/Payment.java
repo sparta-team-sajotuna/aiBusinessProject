@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 import org.springframework.cglib.core.Local;
 
 import java.sql.Time;
@@ -18,6 +20,8 @@ import java.util.UUID;
 @Getter
 @Entity
 @Table(name = "p_payment")
+// Delete의 값이 null인 정보만 가져옴
+@Where(clause = "deleted_at is NULL")
 public class Payment extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -42,6 +46,7 @@ public class Payment extends Timestamped {
     @JoinColumn
     private User user;
 
-//    private LocalDateTime deletedAt;
-//    private String deletedBy;
+    public void cancelPayment(){
+        this.status = PaymentStatusEnum.CANCELED;
+    }
 }

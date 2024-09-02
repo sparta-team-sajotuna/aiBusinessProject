@@ -2,7 +2,10 @@ package com.sparta.aibusinessproject.domain;
 
 import com.sparta.aibusinessproject.domain.request.AddressModifyRequest;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
@@ -52,20 +55,4 @@ public class Address extends Timestamped {
         this.town = request.getTown() != null ? request.getTown() : this.town;
         this.detailAddress = request.getDetailAddress() != null ? request.getDetailAddress() : this.detailAddress;
     }
-
-//    @PrePersist
-//    public void prePersist() {
-//        super.updateCreated(this.user);
-//    }
-//
-//    @PreUpdate
-//    public void preUpdate() {
-//        super.updateModified(this.user);
-//    }
-
-    // 논리 삭제가 아닌 물리 삭제 시 호출 됨
-//    @PreRemove
-//    public void preRemove() {
-//        super.updateDeleted(this.user);
-//    }
 }

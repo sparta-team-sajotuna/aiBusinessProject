@@ -7,6 +7,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sparta.aibusinessproject.domain.Order;
 import com.sparta.aibusinessproject.domain.OrderStatusEnum;
 import com.sparta.aibusinessproject.domain.QOrder;
+import com.sparta.aibusinessproject.domain.UserRoleEnum;
 import com.sparta.aibusinessproject.domain.request.OrderSearchRequest;
 import com.sparta.aibusinessproject.domain.response.OrderFindResponse;
 import lombok.RequiredArgsConstructor;
@@ -24,15 +25,13 @@ import static com.sparta.aibusinessproject.domain.QMenu.menu;
 import static com.sparta.aibusinessproject.domain.QOrder.order;
 import static com.sparta.aibusinessproject.domain.QOrderMenu.orderMenu;
 
-//TODO 안지연
-// -주석풀기
 @RequiredArgsConstructor
 public class OrderRepositoryImpl implements OrderRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public Page<OrderFindResponse> searchOrders(OrderSearchRequest searchDto, Pageable pageable, String role, String userId) {
+    public Page<OrderFindResponse> searchOrders(OrderSearchRequest searchDto, Pageable pageable, UserRoleEnum role, String userId) {
 
         List<OrderSpecifier<?>> orders = getAllOrderSpecifiers(pageable);
 
@@ -42,9 +41,7 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
                 .leftJoin(orderMenu.menu, menu).fetchJoin() //menu 조인
                 .where(
                         statusEq(searchDto.getStatus()),
-                        order.deletedAt.isNull()
-                        //orderItemIdsIn(searchDto.getOrderItemIds())
-                        //userCheck(role, userId)
+                        userCheck(role, userId)
                 )
                 .orderBy(orders.toArray(new OrderSpecifier[0]))
                 .offset(pageable.getOffset())
@@ -62,13 +59,17 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
     private BooleanExpression statusEq(OrderStatusEnum status) {
         return status != null ? order.status.eq(status) : null;
     }
-//    private BooleanExpression userCheck(String role, String userId) {
-//        return role.equals("MEMBER")? order.createdBy.eq(userId): null;
-//    }
-
-//    private BooleanExpression orderItemIdsIn(List<Long> orderItemIds) {
-//        return orderItemIds != null && !orderItemIds.isEmpty() ? order.orderItemIds.any().in(orderItemIds) : null;
-//    }
+    private BooleanExpression userCheck(UserRoleEnum role, String userId) {
+        if(role.equals(UserRoleEnum.CUSTOMER)){ // 고객 > 자신의 주문 내역만 조회 가능
+            return order.user.userId.eq(userId);
+        }
+        else if(role.equals(UserRoleEnum.OWNER)){ // 가게 주인 >  자신의 가게 주문 내역 조회 가능
+            return order.store.user.userId.eq(userId);
+        }
+        else{
+            return null;
+        }
+    }
 
     private List<OrderSpecifier<?>> getAllOrderSpecifiers(Pageable pageable) {
         List<OrderSpecifier<?>> orders = new ArrayList<>();
@@ -78,10 +79,10 @@ public class OrderRepositoryImpl implements OrderRepositoryCustom {
                 com.querydsl.core.types.Order direction = sortOrder.isAscending() ? com.querydsl.core.types.Order.ASC : com.querydsl.core.types.Order.DESC;
                 switch (sortOrder.getProperty()) {
                     case "createdAt":
-                        orders.add(new OrderSpecifier<>(direction, QOrder.order.createdAt));
+                        orders.add(new OrderSpecifier<>(direction, order.createdAt));
                         break;
                     case "modifiedAt":
-                        orders.add(new OrderSpecifier<>(direction, QOrder.order.updatedAt));
+                        orders.add(new OrderSpecifier<>(direction, order.updatedAt));
                         break;
                     default:
                         break;
