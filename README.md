@@ -1,6 +1,6 @@
 <div align="center">
 <p align='center'>
-    <a href=" ">
+    <a href="http://43.200.255.34/swagger-ui/index.html">
      <img src="https://img.shields.io/badge/Swagger-85EA2D?style=flat&logo=Swagger&logoColor=white"/>
   </a> | 
 
@@ -113,7 +113,7 @@ dependencies {
 
 ## 기능리스트
 
-[🔗 API URL Swagger]()
+[🔗 API URL Swagger](http://43.200.255.34/swagger-ui/index.html)
 
 <p>
   
