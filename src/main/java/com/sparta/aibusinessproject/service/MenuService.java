@@ -145,7 +145,7 @@ public class MenuService {
             throw new ApplicationException(NOTFOUND_MENU);
         }
 
-        menuRepository.delete(menu);
+        menuRepository.delete(menuId, user.getUserId());
     }
 
     @Transactional

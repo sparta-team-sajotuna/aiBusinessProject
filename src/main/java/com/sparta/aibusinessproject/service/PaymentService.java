@@ -88,6 +88,7 @@ public class PaymentService {
         return PaymentCreateResponse.fromEntity(paymentRepository.save(payment));
     }
 
+    @Transactional
     public void deletePayment(UUID paymentId, User user) {
         // 롤체크 - 결제 삭제는 고객만
         if(!user.getRole().equals(UserRoleEnum.CUSTOMER)){
@@ -103,9 +104,10 @@ public class PaymentService {
             throw new ApplicationException(ErrorCode.ACCESS_DENIED);
         }
 
-        paymentRepository.delete(payment);
+        paymentRepository.delete(paymentId, user.getUserId());
     }
 
+    @Transactional
     public void cancelPayment(UUID orderId, UUID paymentId, User user) {
         // 롤체크 - 결제 취소는 고객만
         if(!user.getRole().equals(UserRoleEnum.CUSTOMER)){
