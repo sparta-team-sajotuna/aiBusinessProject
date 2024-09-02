@@ -25,7 +25,6 @@ public class UserController {
     private final UserService userService;
 
     // 발급한 토큰을 사용하여 사용자 정보 조회
-    @PreAuthorize("hasRole('ROLE_CUSTOMER')")
     @GetMapping
     @Operation(summary = "유저 조회", description = "특정 유저에 대한 정보 조회", security = @SecurityRequirement(name = "bearerAuth"))
     public Response<UserInfoResponse> getUserInfo(@AuthenticationPrincipal UserDetailsImpl userDetails) {
