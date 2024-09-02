@@ -22,14 +22,12 @@ public class UserService {
 
     // 회원 정보 조회
     public UserInfoResponse getUserInfo(User user) {
-//        User user = userRepository.findById(userId).orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_FOUND));
         return UserInfoResponse.from(user);
     }
 
     // 회원 정보 업데이트
     @Transactional
     public UserInfoResponse modifyUser(User user, UserModifyRequest userModifyRequest) {
-//        User user = userRepository.findById(userId).orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_FOUND));
         // 비밀번호는 암호화해서 저장
         String modifiedPassword = userModifyRequest.getPassword() != null ? passwordEncoder.encode(userModifyRequest.getPassword()) : null;
         user.update(userModifyRequest, modifiedPassword);
@@ -40,8 +38,7 @@ public class UserService {
     // 회원 탈퇴
     @Transactional
     public void deleteUser(User user) {
-//        User user = userRepository.findById(userId).orElseThrow(() -> new ApplicationException(ErrorCode.USER_NOT_FOUND));
-        userRepository.delete(user);
+        userRepository.delete(user.getUserId(), user.getUserId());
     }
 
 }

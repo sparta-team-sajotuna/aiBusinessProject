@@ -11,5 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MenuModifyRequest {
     private String name;
-    private int price;
+    private Integer quantity;
+    private Integer price;
 }

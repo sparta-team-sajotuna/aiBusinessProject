@@ -38,3 +38,10 @@ jwt:
       ket: ${JWT_REFRESH_SECRET_KEY}
 owner:
   token: ${OWNER_TOKEN}
+
+
+gemini:
+  baseurl: https://generativelanguage.googleapis.com
+googleai:
+  api:
+    key: ${GOOGLE_API_KEY}

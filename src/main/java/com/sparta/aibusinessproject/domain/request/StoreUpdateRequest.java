@@ -2,13 +2,16 @@ package com.sparta.aibusinessproject.domain.request;
 
 import com.sparta.aibusinessproject.domain.dto.StoreDto;
 
+import java.time.LocalTime;
+
 public record StoreUpdateRequest(
         String name,
         String address,
         String phone,
         String content,
         int minDeliveryPrice,
-        String operationHousrs,
+        LocalTime openTime,
+        LocalTime closeTime,
         String closedDays,
         String deliveryAddress
 ) {
@@ -21,7 +24,8 @@ public record StoreUpdateRequest(
                 .phone(request.phone())
                 .content(request.content())
                 .minDeliveryPrice(request.minDeliveryPrice())
-                .operationHours(request.operationHousrs())
+                .openTime(request.openTime)
+                .closeTime(request.closeTime)
                 .closedDays(request.closedDays())
                 .deliveryAddress(request.deliveryAddress())
                 .build();
