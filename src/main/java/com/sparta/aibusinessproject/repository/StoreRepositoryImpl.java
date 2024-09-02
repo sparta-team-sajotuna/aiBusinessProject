@@ -48,7 +48,7 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom{
                 .orderBy(orders.toArray(new OrderSpecifier[0]))
                 // 페이징 처리
                 .offset(pageable.getOffset())
-                .limit(searchDto.size())
+                .limit(pageable.getPageSize())
                 // 결과값 반환
                 .fetchResults();
 
@@ -101,7 +101,7 @@ public class StoreRepositoryImpl implements StoreRepositoryCustom{
                     case "createdAt":
                         orders.add(new OrderSpecifier<>(direction, store.createdAt));
                         break;
-                    case "updatedAt":
+                    case "modifiedAt":
                         orders.add(new OrderSpecifier<>(direction, store.updatedAt));
                         break;
                     default:

@@ -31,13 +31,12 @@ public class AiService {
     private final AiRepository aiRepository;
 
 
-    private GeminiResponse getCompletion(GeminiRequest request){
+    public GeminiResponse getCompletion(GeminiRequest request){
         return geminiInterface.getCompletion(GEMINI_PRO, request);
     }
 
-    @Transactional
-    public String getCompletion(String text, User user){
-        GeminiRequest geminiRequest = new GeminiRequest(text+", 답변을 최대한 간결하게 50자 이하로 해줘");
+    public String getAiResponse(String message){
+        GeminiRequest geminiRequest = new GeminiRequest(message+", 답변을 최대한 간결하게 50자 이하로 해줘");
         GeminiResponse response = getCompletion(geminiRequest);
 
         String aiResult = response.getCandidates()
@@ -48,9 +47,16 @@ public class AiService {
                         .map(GeminiResponse.TextPart::getText))
                 .orElse(null);
 
-        // DB 저장
-        aiRepository.save(AiDto.AiDto(user,text,aiResult));
         return aiResult;
+    }
+
+    @Transactional
+    public String getCompletion(String text, User user){
+        String aiResponseMessage = getAiResponse(text);
+
+        // DB 저장
+        aiRepository.save(AiDto.AiDto(user,text,aiResponseMessage));
+        return aiResponseMessage;
     }
 
     public List<AiSearchResponse> getDataFromUser(UserDetailsImpl userDetails) {
@@ -64,20 +70,9 @@ public class AiService {
     }
 
     // 가게 리스트 출력
-    public Page<AiSearchListResponse> getDataList(AiSearchListRequest request, Pageable pageable) {
-        int pageableSize = 0;
-        List<Integer> sizeList = List.of(10,30,50);
+    public Page<AiSearchListResponse> getDataList(Pageable pageable) {
 
-        // TODO : 사이즈 변경
-        if(sizeList.stream().anyMatch(s -> request.pageSize() != s)){
-            pageableSize = 10;
-        }else{
-            pageableSize = request.pageSize();
-        }
-
-        System.out.println(pageableSize);
-
-        return aiRepository.searchAi(pageableSize, pageable);
+        return aiRepository.searchAi(pageable);
     }
 
     @Transactional
@@ -90,7 +85,7 @@ public class AiService {
             throw new ApplicationException(ErrorCode.ACCESS_DENIED);
         }
 
-        aiRepository.delete(ai);
+        aiRepository.delete(ai.getId(),user.getUserId());
         return aiId;
     }
 

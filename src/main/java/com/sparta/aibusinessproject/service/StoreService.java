@@ -28,6 +28,7 @@ import java.util.UUID;
 public class StoreService {
 
     private final CategoryService categoryService;
+    private final AiService aiService;
 
     private final StoreRepository storeRepository;
     private final CategoryRepository categoryRepository;
@@ -52,7 +53,35 @@ public class StoreService {
             throw new ApplicationException(ErrorCode.DUPLICATED_STORENAME);
         }
 
-        Store storeEntity = storeRepository.save(StoreDto.toEntity(dto,user));
+        Store storeEntity = storeRepository.save(StoreDto.toEntity(dto,user,requestDto.content()));
+
+        return storeEntity.getName();
+    }
+
+    // 가게 AI를 활용한 추가
+    @Transactional
+    public String createOrderByAi(StoreCreateRequest requestDto, User user) {
+
+        // 유저 권한일때는 접근 권한 없음
+        if(user.getRole() == UserRoleEnum.CUSTOMER){
+            throw new ApplicationException(ErrorCode.ACCESS_DENIED);
+        }
+
+        StoreDto dto = StoreCreateRequest.toDto(requestDto);
+
+        // 존재하는 가게이름인지 확인
+        Optional<Store> store = storeRepository.findByName(dto.name());
+
+        // 존재하지 않다면
+        if(!store.isEmpty()) {
+            throw new ApplicationException(ErrorCode.DUPLICATED_STORENAME);
+        }
+
+        // Ai 문장 자동 생성
+        String aiResponseMessage = aiService.getAiResponse(requestDto.content());
+
+
+        Store storeEntity = storeRepository.save(StoreDto.toEntity(dto,user,aiResponseMessage));
 
         return storeEntity.getName();
     }
@@ -119,7 +148,8 @@ public class StoreService {
             throw new ApplicationException(ErrorCode.ACCESS_DENIED);
         }
 
-        storeRepository.delete(store);
+
+        storeRepository.delete(store.getId(),user.getUserId());
 
         return storeId;
     }
@@ -190,13 +220,12 @@ public class StoreService {
         if(!store.getUser().getUserId().equals(user.getUserId())){
             throw new ApplicationException(ErrorCode.ACCESS_DENIED);
         }
-
-        List<StoreCategory> storeCategories;
-
-        // StoreCategory가 존재하는지 확인, 존재하지 않다면 에러 발생 / 존재한다면 기존 리스트 가져옴
-        if(store.getStoreCategories().isEmpty()){
-            throw new ApplicationException(ErrorCode.NOTFOUND_CATEGORY);
-        }
+        
+        // 해당 Store의 storeCategory 찾기
+        StoreCategory storeCategory = store.getStoreCategories().stream()
+                .filter(s -> s.getCategory().getName().equals(request.categories()))
+                .findFirst()
+                .orElseThrow(() -> new ApplicationException(ErrorCode.NOTFOUND_CATEGORY));
 
 
         // 카테고리 값 존재유무 확인 및 삭제
@@ -209,7 +238,7 @@ public class StoreService {
             categoryEntity = category.get();
             log.info(categoryEntity.getName() + "," + categoryEntity.getId());
             // 해당 storeCategory 삭제
-            storeCategoryRepository.deleteByCategoryId(categoryEntity.getId());
+            storeCategoryRepository.delete(storeCategory.getId(),user.getUserId());
         }
 
         return  request.categories()+"카테고리가 삭제되었습니다";
