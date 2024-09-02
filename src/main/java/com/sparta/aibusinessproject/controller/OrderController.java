@@ -11,6 +11,7 @@ import com.sparta.aibusinessproject.exception.Response;
 import com.sparta.aibusinessproject.security.UserDetailsImpl;
 import com.sparta.aibusinessproject.service.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -56,7 +57,7 @@ public class OrderController {
      * @return
      */
     @GetMapping
-    @Operation(summary = "주문 전체 조회", description = "주문에 대한 전체 리스트 조회")
+    @Operation(summary = "주문 전체 조회", description = "주문에 대한 전체 리스트 조회", security = @SecurityRequirement(name = "bearerAuth"))
     public Response<Page<OrderFindResponse>> findOrders(OrderSearchRequest searchDto,
                                                         Pageable pageable,
                                                         @AuthenticationPrincipal UserDetailsImpl userDetails) {
@@ -77,7 +78,7 @@ public class OrderController {
      * @return
      */
     @PostMapping
-    @Operation(summary = "주문 생성", description = "User에 따른 주문 생성")
+    @Operation(summary = "주문 생성", description = "User에 따른 주문 생성", security = @SecurityRequirement(name = "bearerAuth"))
     public Response<OrderCreateResponse> createOrder(@RequestBody @Valid OrderCreateRequest requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return Response.success(orderService.createOrder(requestDto, userDetails.getUser()));
     }
@@ -89,7 +90,7 @@ public class OrderController {
      * @return
      */
     @PatchMapping("/{orderId}")
-    @Operation(summary = "주문 취소", description = "5분안에 주문 취소")
+    @Operation(summary = "주문 취소", description = "5분안에 주문 취소", security = @SecurityRequirement(name = "bearerAuth"))
     public Response<UUID> cancelOrder(@PathVariable UUID orderId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return Response.success(orderService.cancelOrder(orderId, userDetails.getUser()));
     }
@@ -102,7 +103,7 @@ public class OrderController {
      * @return
      */
     @PatchMapping("/{orderId}/status")
-    @Operation(summary = "주문 상태 변경", description = "현재 주문 상태 변경(CREATED, PAID, SHIPPED, COMPLETED, CANCELLED)")
+    @Operation(summary = "주문 상태 변경", description = "현재 주문 상태 변경(CREATED, PAID, SHIPPED, COMPLETED, CANCELLED)", security = @SecurityRequirement(name = "bearerAuth"))
     public Response<UUID> modifyOrderStatus(@PathVariable UUID orderId, @RequestBody OrderModifyRequest requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return Response.success(orderService.modifyOrderStatus(orderId, requestDto.getStatus(), userDetails.getUser()));
     }
@@ -113,7 +114,7 @@ public class OrderController {
      * @return
      */
     @DeleteMapping("{orderId}")
-    @Operation(summary = "주문 삭제", description = "DB에 저장된 주문 삭제")
+    @Operation(summary = "주문 삭제", description = "DB에 저장된 주문 삭제", security = @SecurityRequirement(name = "bearerAuth"))
     public Response<?> deleteOrder(@PathVariable UUID orderId, @AuthenticationPrincipal UserDetailsImpl userDetails){
         orderService.deleteOrder(orderId, userDetails.getUser());
         return Response.success("주문 정보가 삭제되었습니다.");

@@ -7,6 +7,7 @@ import com.sparta.aibusinessproject.exception.Response;
 import com.sparta.aibusinessproject.security.UserDetailsImpl;
 import com.sparta.aibusinessproject.service.AddressService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +29,7 @@ public class AddressController {
 
     // 회원 주소 등록
     @PostMapping
-    @Operation(summary = "주소 등록", description = "로그인한 회원을 기준으로 주소 등록")
+    @Operation(summary = "주소 등록", description = "로그인한 회원을 기준으로 주소 등록", security = @SecurityRequirement(name = "bearerAuth"))
     public Response<String> createAddress(@AuthenticationPrincipal UserDetailsImpl userDetails, @RequestBody @Valid AddressCreateRequest addressCreateRequest) {
         addressService.createAddress(userDetails.getUsername(), addressCreateRequest);
         return Response.success("주소 등록이 완료되었습니다.");
@@ -36,14 +37,14 @@ public class AddressController {
 
     // 회원 주소 전체 조회
     @GetMapping
-    @Operation(summary = "주소 전체 조회", description = "로그인한 회원을 기준으로 주소 전체 조회")
+    @Operation(summary = "주소 전체 조회", description = "로그인한 회원을 기준으로 주소 전체 조회", security = @SecurityRequirement(name = "bearerAuth"))
     public Response<List<AddressListFindResponse>> findAllAddressList(@AuthenticationPrincipal UserDetailsImpl userDetails) {
         return Response.success(addressService.findAllAddressList(userDetails.getUsername()));
     }
 
     // 회원 주소 업데이트
     @PatchMapping("/{addressId}")
-    @Operation(summary = "주소 업데이트", description = "로그인한 회원을 기준으로 주소 업데이트")
+    @Operation(summary = "주소 업데이트", description = "로그인한 회원을 기준으로 주소 업데이트", security = @SecurityRequirement(name = "bearerAuth"))
     public Response<String> modifyAddress(@PathVariable UUID addressId, @RequestBody AddressModifyRequest addressModifyRequest) {
         addressService.modifyAddress(addressId, addressModifyRequest);
         return Response.success("주소 수정이 완료되었습니다.");
@@ -51,7 +52,7 @@ public class AddressController {
 
     // 회원 주소 삭제
     @DeleteMapping("/{addressId}")
-    @Operation(summary = "주소 삭제", description = "로그인한 회원을 기준으로 주소 삭제")
+    @Operation(summary = "주소 삭제", description = "로그인한 회원을 기준으로 주소 삭제", security = @SecurityRequirement(name = "bearerAuth"))
     public Response<String> deleteAddress(@PathVariable UUID addressId) {
         addressService.deleteAddress(addressId);
         return Response.success("주소가 삭제가 완료되었습니다.");

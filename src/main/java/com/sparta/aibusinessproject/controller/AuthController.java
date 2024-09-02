@@ -30,9 +30,4 @@ public class AuthController {
         return Response.success("회원가입이 완료되었습니다. 로그인 후 다양한 서비스를 이용해 보세요.");
     }
 
-    @PostMapping("/logout")
-    @Operation(summary = "로그아웃", description = "블랙 리스트를 통한 로그아웃")
-    public void logout() {
-
-    }
 }
