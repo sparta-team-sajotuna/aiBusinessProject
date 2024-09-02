@@ -4,7 +4,7 @@
      <img src="https://img.shields.io/badge/Swagger-85EA2D?style=flat&logo=Swagger&logoColor=white"/>
   </a> | 
 
-<a href=" ">
+<a href=" https://www.notion.so/teamsparta/4a883e0f3faa4ae2b77270daa3956160">
       <img src="https://img.shields.io/badge/Notion-000000?style=flat&logo=Notion&logoColor=white"/>
   </a>
 </p>
