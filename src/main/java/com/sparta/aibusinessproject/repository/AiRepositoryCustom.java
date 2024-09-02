@@ -5,5 +5,5 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface AiRepositoryCustom {
-    Page<AiSearchListResponse> searchAi(int size, Pageable pageable);
+    Page<AiSearchListResponse> searchAi(Pageable pageable);
 }

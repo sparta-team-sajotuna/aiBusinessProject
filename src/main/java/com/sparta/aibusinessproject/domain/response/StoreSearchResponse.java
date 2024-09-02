@@ -1,5 +1,6 @@
 package com.sparta.aibusinessproject.domain.response;
 
+import com.sparta.aibusinessproject.domain.Menu;
 import com.sparta.aibusinessproject.domain.Store;
 import com.sparta.aibusinessproject.domain.StoreCategory;
 import lombok.Getter;
@@ -25,7 +26,7 @@ public class StoreSearchResponse {
 
 
     private List<CategoryListResponse> categories = new ArrayList<>();
-
+    private List<MenuCreateResponse> menus = new ArrayList<>();
 
     // entity -> searchDto  새로 생성하는 경우
     public StoreSearchResponse(Store store) {
@@ -38,6 +39,9 @@ public class StoreSearchResponse {
         this.deliveryAddress = store.getDeliveryAddress();
         for(StoreCategory storeCategory : store.getStoreCategories()){
             categories.add(CategoryListResponse.from(storeCategory.getCategory()));
+        }
+        for(Menu menu : store.getMenu()){
+            menus.add(MenuCreateResponse.fromEntity(menu));
         }
     }
 
