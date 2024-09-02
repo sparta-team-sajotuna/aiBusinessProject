@@ -17,8 +17,7 @@ import java.util.UUID;
 // Delete의 값이 null인 정보만 가져옴
 @Where(clause = "deleted_at is NULL")
 // Delete 쿼리문이 동작될때, 실제로는 Delete쿼리문이 가지않고 아래의 쿼리문이 동작함
-//@SQLDelete(sql = "UPDATE p_address SET deleted_at = current_timestamp WHERE address_id = ?")
-//@SQLDelete(sql = "UPDATE p_address SET deleted_at = current_timestamp, deleted_by = ? WHERE address_id = ?")
+@SQLDelete(sql = "UPDATE p_address SET deleted_at = current_timestamp WHERE address_id = ?")
 public class Address extends Timestamped {
 
     @Id

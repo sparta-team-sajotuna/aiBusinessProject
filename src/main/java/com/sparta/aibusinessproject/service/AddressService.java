@@ -62,11 +62,6 @@ public class AddressService {
     @Transactional
     public void deleteAddress(UUID addressId, String userId) {
         Address address = addressRepository.findById(addressId).orElseThrow(() -> new ApplicationException(ErrorCode.NOT_FOUND_ADDRESS));
-//        address.setDeletedBy(userId);
-//        System.out.println("address.getDeletedBy() = " + address.getDeletedBy());
-//        addressRepository.save(address);
-//        addressRepository.delete(address);
         addressRepository.delete(address.getAddressId(), userId);
     }
-
 }
