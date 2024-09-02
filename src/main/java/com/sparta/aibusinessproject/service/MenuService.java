@@ -74,20 +74,17 @@ public class MenuService {
             throw new ApplicationException(ACCESS_DENIED);
         }
 
+        Store store = storeRepository.findById(storeId)
+                .orElseThrow(() -> new ApplicationException(INVALID_STORE));
+
         if(user.getRole().equals(UserRoleEnum.OWNER)){ //가게 주인이면 본인가게를 검증하고 관리자면 검증을 생략한다.
             // 본인 가게 검증
-            Store store = storeRepository.findById(storeId)
-                    .orElseThrow(() -> new ApplicationException(INVALID_STORE));
-
             if(!store.getUser().getUserId().equals(user.getUserId())){
                 throw new ApplicationException(ACCESS_DENIED);
             }
         }
 
-        Menu menu = MenuCreateRequest.toEntity(requestDto,
-                storeRepository.findById(storeId)
-                        .orElseThrow(() -> new ApplicationException(ErrorCode.INVALID_STORE))
-        );
+        Menu menu = MenuCreateRequest.toEntity(requestDto, store);
 
         return MenuCreateResponse.fromEntity(menuRepository.save(menu));
 
@@ -99,11 +96,11 @@ public class MenuService {
             throw new ApplicationException(ACCESS_DENIED);
         }
 
+        Store store = storeRepository.findById(storeId)
+                .orElseThrow(() -> new ApplicationException(INVALID_STORE));
+
         if(user.getRole().equals(UserRoleEnum.OWNER)){ //가게 주인이면 본인가게를 검증하고 관리자면 검증을 생략한다.
             // 본인 가게 검증
-            Store store = storeRepository.findById(storeId)
-                    .orElseThrow(() -> new ApplicationException(INVALID_STORE));
-
             if(!store.getUser().getUserId().equals(user.getUserId())){
                 throw new ApplicationException(ACCESS_DENIED);
             }
@@ -127,11 +124,11 @@ public class MenuService {
             throw new ApplicationException(ACCESS_DENIED);
         }
 
+        Store store = storeRepository.findById(storeId)
+                .orElseThrow(() -> new ApplicationException(INVALID_STORE));
+
         if(user.getRole().equals(UserRoleEnum.OWNER)){ //가게 주인이면 본인가게를 검증하고 관리자면 검증을 생략한다.
             // 본인 가게 검증
-            Store store = storeRepository.findById(storeId)
-                    .orElseThrow(() -> new ApplicationException(INVALID_STORE));
-
             if(!store.getUser().getUserId().equals(user.getUserId())){
                 throw new ApplicationException(ACCESS_DENIED);
             }
