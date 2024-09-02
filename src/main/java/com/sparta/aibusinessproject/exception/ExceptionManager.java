@@ -9,6 +9,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.util.stream.Collectors;
+
 
 @RestControllerAdvice
 public class ExceptionManager {
@@ -51,6 +53,8 @@ public class ExceptionManager {
                     return new ErrorResponse(ErrorCode.INVALID_EMAIL, ErrorCode.INVALID_EMAIL.getMessage());
             }
         }
-        return new ErrorResponse(ErrorCode.INVALID, "다시 시도해 주세요.");
+        return new ErrorResponse(ErrorCode.INVALID,bindingResult.getFieldErrors().stream()
+                .map(fe -> fe.getField() + " " + fe.getDefaultMessage())
+                .collect(Collectors.joining(", ")));
     }
 }
