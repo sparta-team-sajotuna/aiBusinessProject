@@ -5,7 +5,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/delivery
     username: postgres
-    password: tkwhckacl
+    password: ${DB_SECRET}
     driver-class-name: org.postgresql.Driver
   jpa:
     show-sql: true
@@ -33,6 +33,9 @@ logging:
 jwt:
   secret:
     key: ${JWT_SECRET_KEY}
+  refresh:
+    secret:
+      ket: ${JWT_REFRESH_SECRET_KEY}
 owner:
   token: ${OWNER_TOKEN}
 

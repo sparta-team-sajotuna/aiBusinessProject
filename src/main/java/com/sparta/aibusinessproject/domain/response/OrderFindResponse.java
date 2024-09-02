@@ -30,6 +30,7 @@ public class OrderFindResponse {
 
     private OrderStatusEnum status;
 
+    @Builder.Default
     private List<MenuInfoResponse> menuList = new ArrayList<>();
 
     public static OrderFindResponse fromEntity(Order order) {

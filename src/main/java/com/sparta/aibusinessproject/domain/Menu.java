@@ -1,6 +1,5 @@
 package com.sparta.aibusinessproject.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sparta.aibusinessproject.domain.request.MenuModifyRequest;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
@@ -24,8 +23,6 @@ import java.util.UUID;
 @Table(name = "p_menu")
 // Delete의 값이 null인 정보만 가져옴
 @Where(clause = "deleted_at is NULL")
-// Delete 쿼리문이 동작될때, 실제로는 Delete쿼리문이 가지않고 아래의 쿼리문이 동작함
-@SQLDelete(sql = "UPDATE p_menu SET deleted_at = current_timestamp WHERE id = ?")
 public class Menu extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -44,6 +41,7 @@ public class Menu extends Timestamped {
     @JoinColumn(name = "store_id")
     private Store store;
 
+    @Builder.Default
     @OneToMany(mappedBy = "menu", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderMenu> orderMenuList = new ArrayList<>();
 

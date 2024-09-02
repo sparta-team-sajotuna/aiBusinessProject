@@ -1,7 +1,8 @@
 package com.sparta.aibusinessproject.controller;
 
-import com.sparta.aibusinessproject.domain.Menu;
-import com.sparta.aibusinessproject.domain.request.*;
+import com.sparta.aibusinessproject.domain.request.MenuCreateRequest;
+import com.sparta.aibusinessproject.domain.request.MenuModifyRequest;
+import com.sparta.aibusinessproject.domain.request.MenuSearchRequest;
 import com.sparta.aibusinessproject.domain.response.MenuCreateResponse;
 import com.sparta.aibusinessproject.domain.response.MenuFindResponse;
 import com.sparta.aibusinessproject.domain.response.MenuUpdateResponse;
@@ -17,7 +18,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,6 +37,7 @@ public class MenuController {
 
     /**
      * 메뉴 단건 조회
+     *
      * @param menuId
      * @return
      */
@@ -50,6 +51,7 @@ public class MenuController {
 
     /**
      * 메뉴 전체 조회
+     *
      * @param storeId
      * @param searchDto
      * @param pageable
@@ -60,9 +62,9 @@ public class MenuController {
     public Response<Page<MenuFindResponse>> findMenus(@PathVariable UUID storeId,
                                                       MenuSearchRequest searchDto,
                                                       Pageable pageable,
-                                                      @AuthenticationPrincipal UserDetailsImpl userDetails){
+                                                      @AuthenticationPrincipal UserDetailsImpl userDetails) {
         int size = DEFAULT_PAGE_SIZE; // 기본 10건
-        if(Arrays.stream(ALLOWED_PAGE_SIZES).anyMatch(s->s == pageable.getPageSize())){ //요청 사이즈가 10, 30, 50일 때
+        if (Arrays.stream(ALLOWED_PAGE_SIZES).anyMatch(s -> s == pageable.getPageSize())) { //요청 사이즈가 10, 30, 50일 때
             size = pageable.getPageSize();
         }
 
@@ -73,6 +75,7 @@ public class MenuController {
 
     /**
      * 메뉴 생성
+     *
      * @param storeId
      * @param requestDto
      * @return
@@ -87,6 +90,7 @@ public class MenuController {
 
     /**
      * 메뉴 수정
+     *
      * @param storeId
      * @param menuId
      * @param requestDto
@@ -97,12 +101,13 @@ public class MenuController {
     public Response<MenuUpdateResponse> modifyMenu(@Parameter(description = "StoreId", required = true) @PathVariable UUID storeId,
                                                    @Parameter(description = "MenuId", required = true)@PathVariable UUID menuId,
                                                    @RequestBody MenuModifyRequest requestDto,
-                                                   @AuthenticationPrincipal UserDetailsImpl userDetails){
+                                                   @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return Response.success(menuService.modifyMenu(storeId, menuId, requestDto, userDetails.getUser()));
     }
 
     /**
      * 메뉴 삭제
+     *
      * @param storeId
      * @param menuId
      * @return
