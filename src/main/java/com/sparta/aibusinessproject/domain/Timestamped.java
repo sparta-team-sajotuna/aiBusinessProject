@@ -55,15 +55,12 @@ public class Timestamped {
     // 애노테이션을 제외한 메소드만 작성후 사용하는 해당 클래스에 라이프사이클 메서드를 구현해준다.
     // @PrePersist
     public void updateCreated(User user) {
-        this.createdAt = LocalDateTime.now();
         this.createdBy = user.getUserId();
     }
 
     //  @PreUpdate
     //  @PrePersist
     public void updateModified(User user) {
-        this.updatedAt = LocalDateTime.now();
         this.updatedBy = user.getUserId();
     }
-
 }

@@ -44,8 +44,8 @@ public class MenuController {
     @GetMapping("/{menuId}")
     @Operation(summary = "메뉴 단건 조회", description = "해당 가게의 해당 메뉴에 대한 상세 조회")
     public Response<MenuFindResponse> findMenu(@Parameter(description = "StoreId", required = true) @PathVariable UUID storeId,
-                                               @Parameter(description = "MenuId", required = true)@PathVariable UUID menuId,
-                                               @AuthenticationPrincipal UserDetailsImpl userDetails){
+                                               @Parameter(description = "MenuId", required = true) @PathVariable UUID menuId,
+                                               @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return Response.success(menuService.findMenu(storeId, menuId, userDetails.getUser()));
     }
 
@@ -99,7 +99,7 @@ public class MenuController {
     @PatchMapping("/{menuId}")
     @Operation(summary = "메뉴 수정", description = "해당 가게에 대한 메뉴 수정", security = @SecurityRequirement(name = "bearerAuth"))
     public Response<MenuUpdateResponse> modifyMenu(@Parameter(description = "StoreId", required = true) @PathVariable UUID storeId,
-                                                   @Parameter(description = "MenuId", required = true)@PathVariable UUID menuId,
+                                                   @Parameter(description = "MenuId", required = true) @PathVariable UUID menuId,
                                                    @RequestBody MenuModifyRequest requestDto,
                                                    @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return Response.success(menuService.modifyMenu(storeId, menuId, requestDto, userDetails.getUser()));
@@ -115,8 +115,8 @@ public class MenuController {
     @DeleteMapping("/{menuId}")
     @Operation(summary = "메뉴 삭제", description = "해당 가게에 대한 메뉴 삭제", security = @SecurityRequirement(name = "bearerAuth"))
     public Response<?> deleteMenu(@Parameter(description = "StoreId", required = true) @PathVariable UUID storeId,
-                                  @Parameter(description = "MenuId", required = true)@PathVariable UUID menuId,
-                                     @AuthenticationPrincipal UserDetailsImpl userDetails){
+                                  @Parameter(description = "MenuId", required = true) @PathVariable UUID menuId,
+                                  @AuthenticationPrincipal UserDetailsImpl userDetails) {
         menuService.deleteMenu(storeId, menuId, userDetails.getUser());
         return Response.success("해당 메뉴 정보가 삭제되었습니다.");
     }

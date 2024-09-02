@@ -25,7 +25,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/signup")
-    @Operation(summary = "SighUp", description = "회원 가입(정해진 형식에 맞춰 회원가입)")
+    @Operation(summary = "회원가입", description = "회원 가입(정해진 형식에 맞춰 회원가입)")
     public Response<String> signup(@RequestBody @Valid SignupRequest signupRequestDto) {
         log.info(signupRequestDto.toString());
         authService.signup(signupRequestDto);
@@ -33,7 +33,7 @@ public class AuthController {
     }
 
     @PostMapping("/reissue")
-    @Operation(summary = "ReIssue", description = "Access토큰 재발급")
+    @Operation(summary = "토큰 재발급", description = "Access토큰 재발급")
     public Response<?> reIssue(HttpServletRequest request, HttpServletResponse response) {
         authService.reIssue(request, response);
         return Response.success("Access Token 재발급 완료");

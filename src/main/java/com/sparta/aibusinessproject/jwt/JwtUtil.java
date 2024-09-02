@@ -84,7 +84,7 @@ public class JwtUtil {
             Cookie refreshTokenCookie = new Cookie("RefreshTokenCookie", refreshToken);
             refreshTokenCookie.setHttpOnly(true);
             refreshTokenCookie.setPath("/");
-            refreshTokenCookie.setMaxAge((int) (REFRESH_TOKEN_TIME / 1000));
+            refreshTokenCookie.setMaxAge((int) (REFRESH_TOKEN_TIME / 1000)); // 밀리 초가 아닌 초 단위기 때문에 /1000
             return refreshTokenCookie;
         } catch (UnsupportedEncodingException e) {
             log.error("Refresh Token encoding 오류: {}", e.getMessage());

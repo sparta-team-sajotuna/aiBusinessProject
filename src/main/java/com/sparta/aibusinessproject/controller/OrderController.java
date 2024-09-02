@@ -114,7 +114,7 @@ public class OrderController {
      */
     @DeleteMapping("{orderId}")
     @Operation(summary = "주문 삭제", description = "DB에 저장된 주문 삭제", security = @SecurityRequirement(name = "bearerAuth"))
-    public Response<?> deleteOrder(@PathVariable UUID orderId, @AuthenticationPrincipal UserDetailsImpl userDetails){
+    public Response<?> deleteOrder(@PathVariable UUID orderId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         orderService.deleteOrder(orderId, userDetails.getUser());
         return Response.success("주문 정보가 삭제되었습니다.");
     }
