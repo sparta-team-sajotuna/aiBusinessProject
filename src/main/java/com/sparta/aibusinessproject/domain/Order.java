@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.web.bind.annotation.BindParam;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -48,7 +49,7 @@ public class Order extends Timestamped {
     @JoinColumn(name = "user_id")
     private Store store;*/
 
-
+    @Builder.Default
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderMenu> orderMenuList = new ArrayList<>();
 

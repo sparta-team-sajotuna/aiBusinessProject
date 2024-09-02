@@ -33,6 +33,7 @@ public class UserService {
         // 비밀번호는 암호화해서 저장
         String modifiedPassword = userModifyRequest.getPassword() != null ? passwordEncoder.encode(userModifyRequest.getPassword()) : null;
         user.update(userModifyRequest, modifiedPassword);
+        userRepository.save(user);
         return UserInfoResponse.from(user);
     }
 

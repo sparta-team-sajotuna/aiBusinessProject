@@ -43,10 +43,10 @@ public class OrderController {
         return Response.success(orderService.createStore(requestDto));
     }
 
-    @DeleteMapping("/{orderId}")
-    public Response<UUID> deleteOrder(@PathVariable UUID orderId){
-        return Response.success(orderService.deleteOrder(orderId));
-    }
+//    @DeleteMapping("/{orderId}")
+//    public Response<UUID> deleteOrder(@PathVariable UUID orderId){
+//        return Response.success(orderService.deleteOrder(orderId));
+//    }
 
     @PatchMapping("/{orderId}")
     public Response<UUID> modify(@PathVariable UUID orderId, @RequestBody OrderModifyRequest requestDto){

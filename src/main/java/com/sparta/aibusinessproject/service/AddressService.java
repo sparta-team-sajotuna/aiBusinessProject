@@ -32,6 +32,10 @@ public class AddressService {
     @Transactional
     public void createAddress(String userId, AddressCreateRequest addressCreateRequest) {
         User user = userRepository.findById(userId).orElseThrow(() -> new ApplicationException((ErrorCode.USER_NOT_FOUND)));
+        // 현재 주소 개수 확인
+        if (user.getAddresses().size() >= 5) {
+            throw new ApplicationException(ErrorCode.ADDRESS_LIMIT_EXCEEDED); // 최대 주소 개수를 초과했을 때 예외 처리
+        }
         user.addAddress(AddressCreateRequest.toEntity(addressCreateRequest));
         userRepository.save(user);
     }
@@ -56,7 +60,13 @@ public class AddressService {
 
     // 회원 주소 삭제
     @Transactional
-    public void deleteAddress(UUID addressId) {
-        addressRepository.deleteById(addressId);
+    public void deleteAddress(UUID addressId, String userId) {
+        Address address = addressRepository.findById(addressId).orElseThrow(() -> new ApplicationException(ErrorCode.NOT_FOUND_ADDRESS));
+//        address.setDeletedBy(userId);
+//        System.out.println("address.getDeletedBy() = " + address.getDeletedBy());
+//        addressRepository.save(address);
+//        addressRepository.delete(address);
+        addressRepository.delete(address.getAddressId(), userId);
     }
+
 }

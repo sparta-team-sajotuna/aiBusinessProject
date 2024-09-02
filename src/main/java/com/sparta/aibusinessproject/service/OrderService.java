@@ -41,18 +41,18 @@ public class OrderService {
 
     @Transactional(readOnly = true)
     public Page<OrderFindResponse> findAllOrders(OrderSearchRequest searchDto, Pageable pageable, String role, String userId) {
-        return orderRepository.searchOrders(searchDto, pageable,role, userId);
+        return orderRepository.searchOrders(searchDto, pageable, role, userId);
     }
 
     @Transactional
     public OrderCreateResponse createStore(OrderCreateRequest requestDto) {
         Order order = OrderCreateRequest.toEntity(requestDto);
 
-        for(OrderMenuRequest orderMenu : requestDto.getMenuIds()){
+        for (OrderMenuRequest orderMenu : requestDto.getMenuIds()) {
             order.addOrderMenu(OrderMenu.createOrderMenu(order,
                     menuRepository.findById(orderMenu.getMenuId())
-                    .filter(p -> p.getDeletedAt() == null)
-                    .orElseThrow(() -> new ApplicationException(INVALID_MENU)), orderMenu.getQuantity())
+                            .filter(p -> p.getDeletedAt() == null)
+                            .orElseThrow(() -> new ApplicationException(INVALID_MENU)), orderMenu.getQuantity())
             );
         }
 
@@ -69,7 +69,7 @@ public class OrderService {
         LocalDateTime createdAt = order.getCreatedAt();
         LocalDateTime now = LocalDateTime.now();
         Duration duration = Duration.between(createdAt, now);
-        if(duration.toMinutes() > 5){
+        if (duration.toMinutes() > 5) {
             throw new ApplicationException(ORDER_CANCELLATION_NOT_ALLOWED_TIME);
         }
 
@@ -77,6 +77,7 @@ public class OrderService {
         order.deleteOrder("user");
 
         return orderRepository.save(order).getId();
+//    }
     }
 
     public UUID modifyOrderStatus(UUID orderId, OrderStatusEnum status) {

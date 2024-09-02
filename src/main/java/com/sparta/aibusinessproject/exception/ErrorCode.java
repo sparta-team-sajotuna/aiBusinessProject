@@ -20,6 +20,7 @@ public enum ErrorCode {
     INVALID_PHONE(HttpStatus.BAD_REQUEST, "휴대폰 번호를 형식에 맞게 입력해 주세요."),
 
     NOT_FOUND_ADDRESS(HttpStatus.NOT_FOUND, "해당 주소를 찾을 수 없습니다."),
+    ADDRESS_LIMIT_EXCEEDED(HttpStatus.BAD_REQUEST, "등록할 수 있는 개수를 초과했습니다."),
 
     DUPLICATED_STORENAME(HttpStatus.CONFLICT, "가게 이름이 중복됩니다."),
     INVALID_STORE(HttpStatus.NOT_FOUND,"가게 정보가 없습니다."),
@@ -40,7 +41,6 @@ public enum ErrorCode {
 
     ACCESS_DENIED(HttpStatus.FORBIDDEN, "접근 권한이 없습니다."),
     INVALID_TOKEN(HttpStatus.NOT_FOUND, "유효하지 않은 토큰입니다.");
-
 
     private HttpStatus status;
     private String message;

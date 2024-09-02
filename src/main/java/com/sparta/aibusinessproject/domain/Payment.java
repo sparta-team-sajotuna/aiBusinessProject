@@ -42,6 +42,6 @@ public class Payment extends Timestamped {
     @JoinColumn
     private User user;
 
-    private LocalDateTime deletedAt;
-    private String deletedBy;
+//    private LocalDateTime deletedAt;
+//    private String deletedBy;
 }

@@ -45,8 +45,8 @@ public class AddressController {
 
     // 회원 주소 삭제
     @DeleteMapping("/{addressId}")
-    public Response<String> deleteAddress(@PathVariable UUID addressId) {
-        addressService.deleteAddress(addressId);
+    public Response<String> deleteAddress(@PathVariable UUID addressId, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        addressService.deleteAddress(addressId, userDetails.getUsername());
         return Response.success("주소가 삭제가 완료되었습니다.");
     }
 }

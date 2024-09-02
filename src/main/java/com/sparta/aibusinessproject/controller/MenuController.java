@@ -73,9 +73,9 @@ public class MenuController {
      * @param menuId
      * @return
      */
-    @DeleteMapping("/{menuId}")
-    public Response<UUID> deleteMenu(@PathVariable UUID storeId, @PathVariable UUID menuId){
-        return Response.success(menuService.deleteStore(storeId,menuId));
-    }
+//    @DeleteMapping("/{menuId}")
+//    public Response<UUID> deleteMenu(@PathVariable UUID storeId, @PathVariable UUID menuId){
+//        return Response.success(menuService.deleteStore(storeId,menuId));
+//    }
 }
 
