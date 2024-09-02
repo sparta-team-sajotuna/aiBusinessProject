@@ -159,6 +159,7 @@ public class OrderService {
     @Transactional
     public UUID modifyOrderStatus(UUID orderId, OrderStatusEnum status, User user) {
         // 주문 상태 수정은 가게 주인만 한다.
+        log.info("user role {}", user.getRole());
         if(!user.getRole().equals(UserRoleEnum.OWNER)){
             throw new ApplicationException(ACCESS_DENIED);
         }
@@ -193,6 +194,9 @@ public class OrderService {
     }
 
     public static boolean checkTime(LocalTime startTime , LocalTime endTime, LocalDateTime now){
+        if(startTime == null || endTime == null){
+            return true;
+        }
         LocalDateTime startDateTime = now.with(startTime);
         LocalDateTime endDateTime = now.with(endTime);
 

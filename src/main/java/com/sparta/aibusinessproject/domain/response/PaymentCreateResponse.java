@@ -15,12 +15,14 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PaymentCreateResponse {
+    private UUID paymentId;
     private PaymentStatusEnum status;
     private int payAmount;
     private String payMethod;
 
     public static PaymentCreateResponse fromEntity(Payment payment) {
         return PaymentCreateResponse.builder()
+                .paymentId(payment.getId())
                 .status(payment.getStatus())
                 .payAmount(payment.getPayAmount())
                 .payMethod(payment.getPayMethod())
