@@ -2,12 +2,11 @@ package com.sparta.aibusinessproject.controller;
 
 import com.sparta.aibusinessproject.domain.request.SignupRequest;
 import com.sparta.aibusinessproject.exception.Response;
-import com.sparta.aibusinessproject.repository.RefreshRepository;
 import com.sparta.aibusinessproject.service.AuthService;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,10 +33,9 @@ public class AuthController {
     }
 
     @PostMapping("/reissue")
-    @Operation(summary = "ReIssue", description = "Access토큰 재발급") 
+    @Operation(summary = "ReIssue", description = "Access토큰 재발급")
     public Response<?> reIssue(HttpServletRequest request, HttpServletResponse response) {
         authService.reIssue(request, response);
         return Response.success("Access Token 재발급 완료");
-
     }
 }

@@ -22,17 +22,11 @@ public enum ErrorCode {
     NOT_FOUND_ADDRESS(HttpStatus.NOT_FOUND, "해당 주소를 찾을 수 없습니다."),
     ADDRESS_LIMIT_EXCEEDED(HttpStatus.BAD_REQUEST, "등록할 수 있는 개수를 초과했습니다."),
 
-    INVALID(HttpStatus.BAD_REQUEST, "다시 시도해 주세요."),
-    INVALID_USERID(HttpStatus.BAD_REQUEST, "아이디를 형식에 맞게 입력해 주세요."),
-    INVALID_PASSWORD(HttpStatus.BAD_REQUEST, "비밀번호를 형식에 맞게 입력해 주세요."),
-    INVALID_EMAIL(HttpStatus.BAD_REQUEST, "이메일을 형식에 맞게 입력해 주세요."),
-    INVALID_PHONE(HttpStatus.BAD_REQUEST, "휴대폰 번호를 형식에 맞게 입력해 주세요."),
-
     DUPLICATED_STORENAME(HttpStatus.CONFLICT, "가게 이름이 중복됩니다."),
-    INVALID_STORE(HttpStatus.NOT_FOUND,"가게 정보가 없습니다."),
-    INVALID_CATEGORY(HttpStatus.NOT_FOUND,"카테고리 정보가 없습니다. 다른 카테고리를 입력해 주세요"),
+    INVALID_STORE(HttpStatus.NOT_FOUND, "가게 정보가 없습니다."),
+    INVALID_CATEGORY(HttpStatus.NOT_FOUND, "카테고리 정보가 없습니다. 다른 카테고리를 입력해 주세요"),
     DUPLICATED_CATEGORY(HttpStatus.CONFLICT, "카테고리 이름이 중복됩니다."),
-    NOTFOUND_CATEGORY(HttpStatus.NOT_FOUND,"카테고리가 존재하지 않습니다."),
+    NOTFOUND_CATEGORY(HttpStatus.NOT_FOUND, "카테고리가 존재하지 않습니다."),
     DEFAULT_VALUE(HttpStatus.BAD_REQUEST, "기본 카테고리 종류 이므로 변경이 불가능합니다."),
     ALREADY_CATEGORY(HttpStatus.ALREADY_REPORTED, "이미 존재하는 카테고리 입니다"),
 
@@ -58,7 +52,7 @@ public enum ErrorCode {
     INVALID_TOKEN(HttpStatus.NOT_FOUND, "유효하지 않은 토큰입니다."),
 
     INVALID_AI(HttpStatus.NOT_FOUND, "존재하지 않는 AI주소입니다.");
-    
+
     private HttpStatus status;
     private String message;
 

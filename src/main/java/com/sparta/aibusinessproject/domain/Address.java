@@ -2,7 +2,10 @@ package com.sparta.aibusinessproject.domain;
 
 import com.sparta.aibusinessproject.domain.request.AddressModifyRequest;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 

@@ -6,7 +6,10 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @Builder
@@ -47,6 +50,7 @@ public class SignupRequest {
 
     // SignupRequest를 User 객체로 변환하는 메서드
     public static User toEntity(SignupRequest signupRequest, UserRoleEnum role) {
+
         return User.builder()
                 .userId(signupRequest.getUserId())
                 .password(signupRequest.getPassword()) // 비밀번호는 암호화 후 저장할 것

@@ -5,11 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.web.bind.annotation.BindParam;
-import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -47,11 +44,11 @@ public class Order extends Timestamped {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn
     private Store store;
-  
+
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderMenu> orderMenuList = new ArrayList<>();
 
-    public void cancelOrder(){
+    public void cancelOrder() {
         modifyOrderStatus(OrderStatusEnum.CANCELLED);
     }
 
@@ -64,11 +61,11 @@ public class Order extends Timestamped {
         this.totalPrice += additionalPrice; // 기존 총 가격에 추가된 메뉴 가격을 더함
     }
 
-    public void modifyOrderStatus(OrderStatusEnum status){
+    public void modifyOrderStatus(OrderStatusEnum status) {
         this.status = status;
     }
 
-    public void updatePaymentMethod(String paymentMethod){
+    public void updatePaymentMethod(String paymentMethod) {
         this.paymentMethod = paymentMethod;
         this.status = OrderStatusEnum.PAID;
     }

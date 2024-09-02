@@ -6,10 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import com.sparta.aibusinessproject.domain.request.SignupRequest;
-import com.sparta.aibusinessproject.domain.request.UserModifyRequest;
-import jakarta.persistence.*;
-import lombok.*;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 

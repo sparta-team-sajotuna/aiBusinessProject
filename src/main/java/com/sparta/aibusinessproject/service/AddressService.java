@@ -64,5 +64,4 @@ public class AddressService {
         Address address = addressRepository.findById(addressId).orElseThrow(() -> new ApplicationException(ErrorCode.NOT_FOUND_ADDRESS));
         addressRepository.delete(address.getAddressId(), userId);
     }
-
 }
