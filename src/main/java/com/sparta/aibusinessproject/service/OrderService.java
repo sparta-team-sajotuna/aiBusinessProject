@@ -188,7 +188,7 @@ public class OrderService {
             throw new ApplicationException(ACCESS_DENIED);
         }
 
-        orderRepository.delete(order);
+        orderRepository.delete(orderId, user.getUserId());
     }
 
     public static boolean checkTime(LocalTime startTime , LocalTime endTime, LocalDateTime now){
