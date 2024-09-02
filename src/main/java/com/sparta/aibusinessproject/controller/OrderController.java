@@ -1,7 +1,5 @@
 package com.sparta.aibusinessproject.controller;
 
-import com.sparta.aibusinessproject.domain.Address;
-import com.sparta.aibusinessproject.domain.User;
 import com.sparta.aibusinessproject.domain.request.OrderCreateRequest;
 import com.sparta.aibusinessproject.domain.request.OrderModifyRequest;
 import com.sparta.aibusinessproject.domain.request.OrderSearchRequest;
@@ -18,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -51,6 +48,7 @@ public class OrderController {
 
     /**
      * 주문 전체 조회
+     *
      * @param searchDto
      * @param pageable
      * @param userDetails
@@ -62,7 +60,7 @@ public class OrderController {
                                                         Pageable pageable,
                                                         @AuthenticationPrincipal UserDetailsImpl userDetails) {
         int size = DEFAULT_PAGE_SIZE; // 기본 10건
-        if(Arrays.stream(ALLOWED_PAGE_SIZES).anyMatch(s->s == pageable.getPageSize())){ //요청 사이즈가 10, 30, 50일 때
+        if (Arrays.stream(ALLOWED_PAGE_SIZES).anyMatch(s -> s == pageable.getPageSize())) { //요청 사이즈가 10, 30, 50일 때
             size = pageable.getPageSize();
         }
 
@@ -110,6 +108,7 @@ public class OrderController {
 
     /**
      * 주문 삭제
+     *
      * @param orderId
      * @return
      */
