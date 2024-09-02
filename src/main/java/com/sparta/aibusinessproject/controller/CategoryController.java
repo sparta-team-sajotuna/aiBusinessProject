@@ -31,11 +31,10 @@ public class CategoryController {
 
     @PostMapping
     @Operation(summary = "카테고리 추가", description = "유연한 카테고리 추가 기능", security = @SecurityRequirement(name = "bearerAuth"))
-    public Response<?> addFolders(@RequestBody CategoryCreateRequest request) {
-        // TODO : UserName 추가
-        categoryService.addCategory(request);
+    public Response<CategoryListResponse> addFolders(@RequestBody CategoryCreateRequest request) {
 
-        return Response.success(request.name() +"의 카테고리 생성이 완료되었습니다.");
+        CategoryListResponse response = CategoryListResponse.from(categoryService.addCategory(request));
+        return Response.success(response);
     }
 
     @GetMapping("/{categoryId}")

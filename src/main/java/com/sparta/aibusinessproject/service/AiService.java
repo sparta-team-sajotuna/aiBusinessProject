@@ -17,6 +17,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 import java.util.UUID;
@@ -46,7 +48,6 @@ public class AiService {
                         .findFirst()
                         .map(GeminiResponse.TextPart::getText))
                 .orElse(null);
-
         return aiResult;
     }
 
