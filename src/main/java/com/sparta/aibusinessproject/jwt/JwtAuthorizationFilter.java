@@ -26,7 +26,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter { // 요청에 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String accessTokenValue = jwtUtil.getAccessTokenFromHeader(request);
-        System.out.println("accessTokenValue = " + accessTokenValue);
         // 토큰 값이 있으면, 토큰 검증
         if (StringUtils.hasText(accessTokenValue)) {
             if (!jwtUtil.isNotExpiredAccessToken(accessTokenValue) || !jwtUtil.validateToken(accessTokenValue)) {
