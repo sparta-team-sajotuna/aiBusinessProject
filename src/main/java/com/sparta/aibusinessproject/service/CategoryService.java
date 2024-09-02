@@ -1,12 +1,15 @@
 package com.sparta.aibusinessproject.service;
 
 import com.sparta.aibusinessproject.domain.Category;
+import com.sparta.aibusinessproject.domain.User;
 import com.sparta.aibusinessproject.domain.request.CategoryCreateRequest;
 import com.sparta.aibusinessproject.domain.response.CategoryListResponse;
 import com.sparta.aibusinessproject.exception.ApplicationException;
 import com.sparta.aibusinessproject.exception.ErrorCode;
 import com.sparta.aibusinessproject.repository.CategoryRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,14 +36,9 @@ public class CategoryService {
     }
     
     // 카테고리 전부 출력
-    public List<CategoryListResponse> getCategories() {
-        List<Category> categories = categoryRepository.findAll();
+    public Page<CategoryListResponse> getCategories(Pageable pageable) {
 
-        List<CategoryListResponse> list = categories.stream()
-                .map(c -> CategoryListResponse.from(c))
-                .collect(Collectors.toList());
-
-        return list;
+        return categoryRepository.searchCategories(pageable);
     }
 
     // 카테고리 세부 출력
@@ -70,10 +68,10 @@ public class CategoryService {
     
     // 카테고리 삭제
     @Transactional
-    public void delete(UUID categoryId) {
+    public void delete(UUID categoryId, User user) {
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new ApplicationException(ErrorCode.NOTFOUND_CATEGORY));
 
-        categoryRepository.delete(category);
+        categoryRepository.delete(category.getId(),user.getUserId());
     }
 }

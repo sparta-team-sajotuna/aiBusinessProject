@@ -34,6 +34,7 @@ public class Timestamped {
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime createdAt;
 
+
     @LastModifiedBy
     @Column(name = "updated_by")
     private String updatedBy;

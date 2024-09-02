@@ -1,0 +1,6 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://${RDS_ENDPOINT}/delivery
+    username: postgres
+    password: ${DB_SECRET}
+    driver-class-name: org.postgresql.Driver
