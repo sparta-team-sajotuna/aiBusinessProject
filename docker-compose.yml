@@ -1,0 +1,7 @@
+services:
+  sajotuna:
+    image: jiyeonahn/aibusinessproject-sajotuna:latest
+    env_file:
+      - .env  # .env 파일을 지정
+    ports:
+      - "8080:8080"  # 포트 매핑

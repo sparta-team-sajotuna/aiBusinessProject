@@ -1,16 +1,19 @@
 spring:
+  output:
+    ansi:
+      enabled: always
   datasource:
     url: jdbc:postgresql://localhost:5432/delivery
     username: postgres
-    password: tkwhckacl
+    password: ${DB_SECRET}
     driver-class-name: org.postgresql.Driver
   jpa:
     show-sql: true
-    database: postgresql
     hibernate:
       ddl-auto: update
     properties:
       hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
         highlight_sql: true
   data:
@@ -26,3 +29,19 @@ logging:
         orm:
           jdbc:
             bind: trace
+
+jwt:
+  secret:
+    key: ${JWT_SECRET_KEY}
+  refresh:
+    secret:
+      ket: ${JWT_REFRESH_SECRET_KEY}
+owner:
+  token: ${OWNER_TOKEN}
+
+
+gemini:
+  baseurl: https://generativelanguage.googleapis.com
+googleai:
+  api:
+    key: ${GOOGLE_API_KEY}
